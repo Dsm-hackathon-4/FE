@@ -1,16 +1,23 @@
-
-export const fonts = {
-  pretendard: "'Pretendard', sans-serif",
+const fontToCss = (weight: number, size: number, lineHeight: number) => {
+  return {
+    fontFamily: "Pretendard",
+    fontWeight: weight,
+    fontSize: `${size}px`,
+    lineHeight: `${lineHeight}px`,
+  };
 };
 
-export const fontSizes = {
-  small: '12px',
-  medium: '16px',
-  large: '20px',
-};
-
-export const fontWeights = {
-  light: 300,
-  regular: 400,
-  bold: 700,
+export const font = {
+  h1: fontToCss(600, 36, 48),
+  h2: fontToCss(600, 32, 42),
+  h3: fontToCss(600, 28, 36),
+  h4: fontToCss(500, 24, 32),
+  t1: fontToCss(600, 20, 24),
+  t2: fontToCss(500, 20, 24),
+  t3: fontToCss(500, 18, 20),
+  t4: fontToCss(400, 18, 20),
+  b1: fontToCss(500, 16, 20),
+  b2: fontToCss(400, 16, 20),
+  l1: fontToCss(500, 14, 18),
+  l2: fontToCss(400, 14, 18),
 };

@@ -1,5 +1,5 @@
-import { Global, css } from '@emotion/react';
-import { theme } from './theme';
+import { Global, css } from "@emotion/react";
+import { theme } from "./theme";
 
 const globalStyles = css`
   * {
@@ -9,7 +9,10 @@ const globalStyles = css`
   }
 
   body {
-    font-family: ${theme.fonts.pretendard};
+    font-family: ${theme.font.b2.fontFamily};
+    font-weight: ${theme.font.b2.fontWeight};
+    font-size: ${theme.font.b2.fontSize};
+    line-height: ${theme.font.b2.lineHeight};
     color: ${theme.color.black};
     background-color: ${theme.color.white};
   }

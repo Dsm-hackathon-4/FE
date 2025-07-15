@@ -28,4 +28,5 @@ export const color = {
     900: "#14532D",
     950: "#052E16",
   },
+  kakao: "#FEE500",
 };
