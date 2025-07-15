@@ -2,6 +2,11 @@ import { Database, License, Logo, Network, Os } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 
+interface SubjectProps {
+  color: string;
+  text: string;
+}
+
 export const SelectSubjectPage = () => {
   const subject = [
     {
@@ -52,7 +57,7 @@ const SubjectDiv = styled.div`
   gap: 20px;
 `;
 
-const Subject = styled.div`
+const Subject = styled.div<SubjectProps>`
   width: 150px;
   height: 150px;
   background-color: ${(props) => props.color};
@@ -65,6 +70,7 @@ const Subject = styled.div`
   flex-direction: column;
   gap: 10px;
   cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   &:hover {
     opacity: 0.8;
   }
