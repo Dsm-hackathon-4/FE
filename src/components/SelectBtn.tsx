@@ -46,12 +46,8 @@ const Wrapper = styled.div<{
     ${(props) =>
       props.active ? theme.color.green[600] : theme.color.zinc[600]};
   &:hover {
-    ${(props) =>
-      (props.active === undefined || props.active === true) &&
-      `
     background-color: ${theme.color.green[200]};
     border: 2px solid ${theme.color.green[600]};
     border-bottom: 6px solid ${theme.color.green[600]};
-  `}
   }
 `;

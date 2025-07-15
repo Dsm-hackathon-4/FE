@@ -31,4 +31,5 @@ export const color = {
   kakao: "#FEE500",
   primary: "#92D2FF",
   primary2: "#92B1FF",
+  til: "#102C73",
 };

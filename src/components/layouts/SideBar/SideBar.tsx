@@ -18,7 +18,7 @@ export const SideBar = () => {
     },
     {
       name: "리더보드",
-      path: "/ranking",
+      path: "/rank",
       icon: Ranking,
     },
     {

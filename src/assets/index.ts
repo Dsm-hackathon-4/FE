@@ -14,3 +14,4 @@ export { default as Do } from "./do.svg";
 export { default as IconSmaller } from "./iconSmaller.svg";
 export { default as RewardChest } from "./rewardChest.svg";
 export { default as Check } from "./checkIcon.svg";
+export { default as Mascot } from "./mascot.svg";

@@ -6,6 +6,9 @@ import {
   SelectDailyGoalPage,
   SelectSubjectPage,
   SelectStudyTypePage,
+  RankPage,
+  ProfilePage,
+  ReviewPage,
 } from "@/pages";
 import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
@@ -18,19 +21,19 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "selectSubject", // /selectSubject
+        path: "selectSubject",
         element: <SelectSubjectPage />,
       },
       {
-        path: "selectAbility", // /selectAbility
+        path: "selectAbility",
         element: <SelectAbilityPage />,
       },
       {
-        path: "selectDailyGoal", // /selectDailyGoal
+        path: "selectDailyGoal",
         element: <SelectDailyGoalPage />,
       },
       {
-        path: "selectStudyType", // /selectStudyType
+        path: "selectStudyType",
         element: <SelectStudyTypePage />,
       },
     ],
@@ -43,16 +46,16 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "ranking", // /learning/ranking
-        element: <div>랭킹 페이지</div>, // 임시 컴포넌트
+        path: "rank",
+        element: <RankPage />,
       },
       {
-        path: "profile", // /learning/profile
-        element: <div>프로필 페이지</div>, // 임시 컴포넌트
+        path: "profile",
+        element: <ProfilePage />,
       },
       {
-        path: "review", // /learning/review
-        element: <div>복습 페이지</div>, // 임시 컴포넌트
+        path: "review",
+        element: <ReviewPage />,
       },
     ],
   },
