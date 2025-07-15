@@ -26,8 +26,7 @@ export const ReviewPage = () => {
 const Title = styled.div`
   display: flex;
   justify-content: left;
-  width: 100%;
-  padding-left: 170px;
+  width: 1012px;
 `;
 
 const Contents = styled.div`
