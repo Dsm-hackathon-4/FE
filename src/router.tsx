@@ -7,7 +7,7 @@ import {
   SelectSubjectPage,
   SelectStudyTypePage,
 } from "@/pages";
-import { HeaderLayout, SideBar } from "@/components/layouts";
+import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
 const router = createBrowserRouter([
   {
@@ -18,29 +18,41 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "/selectSubject",
+        path: "selectSubject", // /selectSubject
         element: <SelectSubjectPage />,
       },
       {
-        path: "/selectAbility",
+        path: "selectAbility", // /selectAbility
         element: <SelectAbilityPage />,
       },
       {
-        path: "/selectDailyGoal",
+        path: "selectDailyGoal", // /selectDailyGoal
         element: <SelectDailyGoalPage />,
       },
       {
-        path: "/selectStudyType",
+        path: "selectStudyType", // /selectStudyType
         element: <SelectStudyTypePage />,
       },
     ],
   },
   {
-    element: <SideBar />,
+    element: <SideBarLayout />,
     children: [
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "ranking", // /learning/ranking
+        element: <div>랭킹 페이지</div>, // 임시 컴포넌트
+      },
+      {
+        path: "profile", // /learning/profile
+        element: <div>프로필 페이지</div>, // 임시 컴포넌트
+      },
+      {
+        path: "review", // /learning/review
+        element: <div>복습 페이지</div>, // 임시 컴포넌트
       },
     ],
   },
