@@ -29,4 +29,6 @@ export const color = {
     950: "#052E16",
   },
   kakao: "#FEE500",
+  primary: "#92D2FF",
+  primary2: "#92B1FF",
 };

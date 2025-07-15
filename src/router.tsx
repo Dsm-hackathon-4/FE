@@ -5,6 +5,7 @@ import {
   SelectAbilityPage,
   SelectDailyGoalPage,
   SelectSubjectPage,
+  SelectStudyTypePage,
 } from "@/pages";
 import { HeaderLayout, SideBar } from "@/components/layouts";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/selectDailyGoal",
         element: <SelectDailyGoalPage />,
+      },
+      {
+        path: "/selectStudyType",
+        element: <SelectStudyTypePage />,
       },
     ],
   },
