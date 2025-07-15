@@ -9,3 +9,7 @@ export { default as Learning } from "./learning.svg";
 export { default as Review } from "./review.svg";
 export { default as Ranking } from "./ranking.svg";
 export { default as Profile } from "./profile.svg";
+export { default as ToDo } from "./toDo.svg";
+export { default as Do } from "./do.svg";
+export { default as IconSmaller } from "./iconSmaller.svg";
+export { default as RewardChest } from "./rewardChest.svg";
