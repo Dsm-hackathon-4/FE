@@ -3,6 +3,7 @@ import {
   HomePage,
   LoginPage,
   SelectAbilityPage,
+  SelectDailyGoalPage,
   SelectSubjectPage,
 } from "@/pages";
 import { MainLayout } from "@/components/layouts";
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/selectAbility",
         element: <SelectAbilityPage />,
+      },
+      {
+        path: "/selectDailyGoal",
+        element: <SelectDailyGoalPage />,
       },
     ],
   },
