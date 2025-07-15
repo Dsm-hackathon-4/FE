@@ -58,7 +58,7 @@ const LoginDiv = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

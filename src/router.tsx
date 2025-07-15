@@ -1,6 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import { HomePage, LoginPage, SelectSubjectPage } from "@/pages";
-import MainLayout from "@/components/layouts/MainLayout";
+import {
+  HomePage,
+  LoginPage,
+  SelectAbilityPage,
+  SelectSubjectPage,
+} from "@/pages";
+import { MainLayout } from "@/components/layouts";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/selectSubject",
         element: <SelectSubjectPage />,
+      },
+      {
+        path: "/selectAbility",
+        element: <SelectAbilityPage />,
       },
     ],
   },

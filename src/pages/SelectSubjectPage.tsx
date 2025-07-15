@@ -1,6 +1,7 @@
 import { Database, License, Logo, Network, Os } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
+import { Wrapper } from "./LoginPage";
 
 interface SubjectProps {
   color: string;
@@ -85,12 +86,4 @@ const Container = styled.div`
   > span {
     font: ${theme.font.h2};
   }
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  gap: 208px;
 `;
