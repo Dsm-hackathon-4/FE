@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
 import { Learning, Logo, Profile, Ranking, Review } from "@/assets";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { MenuBtn } from "../MenuBtn";
 
 export const SideBar = () => {
   const menuList = [
     {
       name: "학습",
-      path: "/learning",
+      path: "/",
       icon: Learning,
     },
     {
@@ -27,6 +27,7 @@ export const SideBar = () => {
       icon: Profile,
     },
   ];
+  const params = useLocation();
   return (
     <Wrapper>
       <Title>
@@ -36,7 +37,9 @@ export const SideBar = () => {
       <MenuDiv>
         {menuList.map((data, index) => (
           <Link to={data.path} key={index}>
-            <MenuBtn icon={data.icon}>{data.name}</MenuBtn>
+            <MenuBtn icon={data.icon} isActive={params.pathname === data.path}>
+              {data.name}
+            </MenuBtn>
           </Link>
         ))}
       </MenuDiv>

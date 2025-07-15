@@ -4,18 +4,19 @@ import styled from "@emotion/styled";
 interface MenuBtnProps {
   children: string;
   icon: string;
+  isActive?: boolean;
 }
 
-export const MenuBtn = ({ children, icon }: MenuBtnProps) => {
+export const MenuBtn = ({ children, icon, isActive }: MenuBtnProps) => {
   return (
-    <Wrapper>
+    <Wrapper isActive={isActive}>
       <img src={icon} alt="" />
       <span>{children}</span>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ isActive?: boolean }>`
   > img {
     width: 32px;
     height: 32px;
@@ -29,6 +30,9 @@ const Wrapper = styled.div`
   cursor: pointer;
   gap: 36px;
   padding-left: 20px;
+  color: ${(props) => (props.isActive ? theme.color.green[500] : "black")};
+  border: 2px solid
+    ${(props) => (props.isActive ? theme.color.green[500] : "none")};
   &:hover {
     border: 2px solid ${theme.color.green[500]};
   }
