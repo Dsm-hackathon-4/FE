@@ -6,16 +6,12 @@ import {
   SelectDailyGoalPage,
   SelectSubjectPage,
 } from "@/pages";
-import { MainLayout } from "@/components/layouts";
+import { HeaderLayout, SideBar } from "@/components/layouts";
 
 const router = createBrowserRouter([
   {
-    element: <MainLayout />,
+    element: <HeaderLayout />,
     children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
       {
         path: "/login",
         element: <LoginPage />,
@@ -31,6 +27,15 @@ const router = createBrowserRouter([
       {
         path: "/selectDailyGoal",
         element: <SelectDailyGoalPage />,
+      },
+    ],
+  },
+  {
+    element: <SideBar />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
       },
     ],
   },

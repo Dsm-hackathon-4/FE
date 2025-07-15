@@ -5,3 +5,7 @@ export { default as Database } from "./solar_database-bold.svg";
 export { default as Os } from "./ix_operating-system.svg";
 export { default as Network } from "./tabler_network.svg";
 export { default as License } from "./tabler_license.svg";
+export { default as Learning } from "./learning.svg";
+export { default as Review } from "./review.svg";
+export { default as Ranking } from "./ranking.svg";
+export { default as Profile } from "./profile.svg";
