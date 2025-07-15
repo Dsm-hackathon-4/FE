@@ -1,20 +1,20 @@
-import { Google, Kakao } from "@/assets";
+import { Google, Kakao, Logo } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 
 export const LoginPage = () => {
   return (
     <Wrapper>
-      <Logo>로고</Logo>
+      <img src={Logo} alt="" />
       <LoginDiv>
         <span>재미있고 효과적인 무료 CS 공부</span>
         <BtnDiv>
           <LoginBtn color={theme.color.kakao}>
-            <img src={Kakao} alt="" />
+            <img src={Kakao} alt="Kakao" />
             카카오 로그인
           </LoginBtn>
           <LoginBtn color={theme.color.zinc[100]}>
-            <img src={Google} alt="" />
+            <img src={Google} alt="Google" />
             구글 로그인
           </LoginBtn>
         </BtnDiv>
@@ -63,14 +63,4 @@ const Wrapper = styled.div`
   align-items: center;
   height: 100vh;
   gap: 208px;
-`;
-
-const Logo = styled.div`
-  width: 300px;
-  height: 300px;
-  background-color: ${theme.color.green[500]};
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
