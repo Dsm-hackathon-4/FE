@@ -1,10 +1,14 @@
+import { RouterProvider } from "react-router-dom";
+import router from "@/router";
+import { ThemeProvider } from "@emotion/react";
+import { GlobalStyles, theme } from "@/themes";
+
 function App() {
   return (
-    <>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   );
 }
 
