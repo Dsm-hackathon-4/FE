@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { theme } from "@/themes";
 import { Learning, Logo, Profile, Ranking, Review } from "@/assets";
 import { Link, useLocation } from "react-router";
-import { MenuBtn } from "../MenuBtn";
+import { MenuBtn } from "../../MenuBtn";
 
 export const SideBar = () => {
   const menuList = [
