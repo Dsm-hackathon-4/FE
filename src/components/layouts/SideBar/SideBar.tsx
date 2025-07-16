@@ -37,7 +37,10 @@ export const SideBar = () => {
       <MenuDiv>
         {menuList.map((data, index) => (
           <Link to={data.path} key={index}>
-            <MenuBtn icon={data.icon} isActive={params.pathname === data.path}>
+            <MenuBtn
+              icon={data.icon}
+              isActive={data.path === '/' ? params.pathname === data.path : params.pathname.startsWith(data.path)}
+            >
               {data.name}
             </MenuBtn>
           </Link>
