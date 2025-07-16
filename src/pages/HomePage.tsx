@@ -5,7 +5,7 @@ import { Cat, Check, IconSmaller, RewardChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
 
 export const HomePage = () => {
-  const dots = [true, true, true, true, false, "reward"];
+  const dots = [true, true, false, "reward"];
   const Road = [
     { road: "데이터베이스 개요", done: true },
     { road: "DBMS (Database Management System)", done: true },
@@ -115,7 +115,7 @@ export const HomePage = () => {
             height: "217px",
             position: "absolute",
             left: "20%",
-            top: "20%",
+            top: "30%",
           }}
         />
       </Contents>
@@ -163,7 +163,7 @@ const RoadMap = styled.div`
 const Contents = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const Dots = styled.div`
@@ -198,4 +198,5 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 132px;
+  padding-top: 86px;
 `;
