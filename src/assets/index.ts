@@ -34,3 +34,8 @@ export { default as CorrectCheck } from "./correctCheck.svg";
 export { default as Fail } from "./fail.svg";
 export { default as LogoIcon } from "./logoIcon.svg";
 export { default as CodeLingo } from "./codeLingo.svg";
+export { default as Rank1 } from "./rank1.svg";
+export { default as Rank2 } from "./rank2.svg";
+export { default as Rank3 } from "./rank3.svg";
+export { default as Fish } from "./fish.svg";
+export { default as Thread } from "./thread.svg";
