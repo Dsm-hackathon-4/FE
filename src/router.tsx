@@ -43,15 +43,15 @@ const router = createBrowserRouter([
         element: <SelectStudyTypePage />,
       },
       {
-        path: "blankProblem",
+        path: "blankProblem/:idx",
         element: <BlankProblem />,
       },
       {
-        path: "defineProblem",
+        path: "defineProblem/:idx",
         element: <DefineProblem />,
       },
       {
-        path: "selectProblem",
+        path: "selectProblem/:idx",
         element: <SelectProblem />,
       },
     ],

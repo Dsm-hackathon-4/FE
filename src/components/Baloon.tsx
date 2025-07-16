@@ -1,13 +1,23 @@
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
+import { useNavigate } from "react-router-dom";
 
 interface BaloonProps {
   children: React.ReactNode;
   children2: React.ReactNode;
   offset?: number;
+  idx: number;
 }
 
-export const Baloon = ({ children, children2, offset }: BaloonProps) => {
+export const Baloon = ({ children, children2, offset, idx }: BaloonProps) => {
+  const navigate = useNavigate();
+  const problems = ["blankProblem", "defineProblem", "selectProblem"];
+
+  const handleClick = () => {
+    const randomUrl = problems[Math.floor(Math.random() * problems.length)];
+    console.log("practice +5 XP");
+    navigate(`/${randomUrl}/${idx}`);
+  };
   return (
     <BaloonWrapper offset={offset}>
       <Arrow />
@@ -16,7 +26,7 @@ export const Baloon = ({ children, children2, offset }: BaloonProps) => {
           <span style={{ ...theme.font.t1 }}>{children}</span>
           <span style={{ ...theme.font.b1 }}>{children2}</span>
         </Text>
-        <Btn>연습 +5 XP</Btn>
+        <Btn onClick={handleClick}>연습 +5 XP</Btn>
       </Balloon>
     </BaloonWrapper>
   );

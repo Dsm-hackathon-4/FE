@@ -95,7 +95,9 @@ export const HomePage = () => {
 
                     // 이전 dot이 유효하고 false이면 열 수 없음
                     if (idx > 0 && dots[idx - 1] === false) {
-                      toast.error("이전 단계를 완료해야 상자를 열 수 있습니다.");
+                      toast.error(
+                        "이전 단계를 완료해야 상자를 열 수 있습니다."
+                      );
                       return;
                     }
 
@@ -116,6 +118,7 @@ export const HomePage = () => {
                       children={RoadDetail?.roadmap.title}
                       children2="열심히 공부해서 실력을 향상시키세요."
                       offset={offsets[idx]}
+                      idx={idx}
                     />
                   )}
                 </DotWrapper>
