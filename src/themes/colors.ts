@@ -53,4 +53,5 @@ export const color = {
   github: "#14191D",
   obsidian: "#7C3AED",
   resultXp: "#CA8A04",
+  modalXp: "#D0A300",
 };

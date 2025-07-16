@@ -1,0 +1,1 @@
+export { CorrectModal } from "./CorrectModal";

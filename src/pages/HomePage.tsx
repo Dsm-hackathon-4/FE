@@ -6,7 +6,28 @@ import { Cat, Check, IconSmaller, RewardChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
 
 export const HomePage = () => {
-  const dots = [true, true, true, "reward"];
+  const dots = [
+    true,
+    true,
+    true,
+    "reward",
+    false,
+    false,
+    false,
+    "reward",
+    false,
+    false,
+    false,
+    "reward",
+    false,
+    false,
+    false,
+    "reward",
+    false,
+    false,
+    false,
+    "reward",
+  ];
   const Road = [
     { road: "데이터베이스 개요", done: true },
     { road: "DBMS (Database Management System)", done: true },
@@ -67,8 +88,9 @@ export const HomePage = () => {
           <Dots>
             {dots.map((done, idx) => {
               const isShowBaloon =
-                (idx === 0 && done === false) ||
-                (done === false && dots[idx - 1] === true);
+                dots[idx] === false &&
+                (dots[idx - 1] === true || dots[idx - 1] === "reward") &&
+                dots[idx - 2] !== false;
               return done === "reward" ? (
                 <StyledRewardChest
                   src={RewardChest}

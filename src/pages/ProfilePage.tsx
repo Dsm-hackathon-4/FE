@@ -185,6 +185,11 @@ const Info = styled.div`
   flex-direction: column;
   gap: 16px;
   border-radius: 12px;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15), 0px 16px 24px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const UserInfo = styled.div`
