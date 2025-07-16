@@ -1,22 +1,29 @@
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
-import { Continuous, Rank, UserIcon, Xp } from "@/assets";
+import { Continuous, Rank, Xp } from "@/assets";
+import { useMyPage } from "@/hooks/useMyPageApi";
 
 export const ProfilePage = () => {
+  const { data, isLoading } = useMyPage();
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+
+  console.log(data);
   const infos = [
     {
       title: "총 XP",
       icon: Xp,
       color: theme.color.xp,
-      value: "1,234,567",
-      info: "+250 오늘",
+      value: data?.xp_info?.total_xp,
+      info: `+${data?.xp_info?.today_xp} 오늘`,
       infoColor: theme.color.green[600],
     },
     {
       title: "현재 등수",
       icon: Rank,
       color: theme.color.rank,
-      value: "#7",
+      value: `#${data?.statistics?.weekly_rank}`,
       info: "상위 15%",
       infoColor: "#2563EB",
     },
@@ -24,7 +31,7 @@ export const ProfilePage = () => {
       title: "연속 학습",
       icon: Continuous,
       color: theme.color.continuous,
-      value: "42일",
+      value: `${data?.study_streak?.current_streak}일`,
       info: "최고 기록!",
       infoColor: "#EA580C",
     },
@@ -33,14 +40,14 @@ export const ProfilePage = () => {
   const goalInfo = [
     {
       title: "목표 풀이 문제",
-      value: "2 / 5",
-      degree: 2 / 5,
+      value: `${data?.study_status?.total_problems} / ${data?.goals?.daily_goal}`,
+      degree: data?.study_status?.total_problems / data?.goals?.daily_goal,
       color: "linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%)",
     },
     {
       title: "XP 획득",
-      value: "250 / 300",
-      degree: 250 / 300,
+      value: `${data?.xp_info?.total_xp} / 300`,
+      degree: data?.xp_info?.total_xp / 300,
       color: "linear-gradient(90deg, #4ADE80 0%, #16A34A 100%)",
     },
   ];
@@ -55,13 +62,15 @@ export const ProfilePage = () => {
       </Title>
       <Contents>
         <User>
-          <UserImg src={UserIcon} alt="유저프로필" />
+          <UserImg src={data?.user_info?.profile_image_url} alt="유저프로필" />
           <UserContents>
-            <span style={theme.font.h4}>김철수</span>
-            <span style={theme.font.b2}>데이터베이스</span>
+            <span style={theme.font.h4}>{data?.user_info?.name}</span>
+            <span style={theme.font.b2}>{data?.user_info?.provider}</span>
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <img src={Continuous} alt="연속이미지" />
-              <span style={theme.font.b1}>42일 연속</span>
+              <span style={theme.font.b1}>
+                {data?.study_streak?.current_streak}일 연속
+              </span>
             </span>
           </UserContents>
         </User>
@@ -188,7 +197,8 @@ const Info = styled.div`
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15), 0px 16px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15),
+      0px 16px 24px rgba(0, 0, 0, 0.15);
   }
 `;
 
