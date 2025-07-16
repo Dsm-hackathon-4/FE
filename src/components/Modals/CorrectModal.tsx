@@ -7,9 +7,19 @@ interface CorrectModalProps {
   isOpen: boolean;
   onClose: () => void;
   type: "correct" | "wrong";
+  answer: string;
+  correctAnswer: string;
+  getXP: number;
 }
 
-export const CorrectModal = ({ isOpen, onClose, type }: CorrectModalProps) => {
+export const CorrectModal = ({
+  isOpen,
+  onClose,
+  type,
+  answer,
+  correctAnswer,
+  getXP,
+}: CorrectModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -26,7 +36,7 @@ export const CorrectModal = ({ isOpen, onClose, type }: CorrectModalProps) => {
                 alt="fail"
                 style={{ position: "absolute", top: "-15px", left: "-15px" }}
               />
-              <span style={theme.font.h4}>입력한 답 : 스택</span>
+              <span style={theme.font.h4}>입력한 답 : {answer}</span>
             </Answer>
           )}
           <Answer type="correct">
@@ -35,11 +45,11 @@ export const CorrectModal = ({ isOpen, onClose, type }: CorrectModalProps) => {
               alt="correctCheck"
               style={{ position: "absolute", top: "-15px", left: "-15px" }}
             />
-            <span style={theme.font.h4}>답 : 스택</span>
+            <span style={theme.font.h4}>답 : {correctAnswer}</span>
           </Answer>
           <Footer>
             <span style={{ ...theme.font.t1, color: theme.color.modalXp }}>
-              {type === "correct" ? "+ 99 XP" : ""}
+              {type === "correct" ? `+ ${getXP} XP` : ""}
             </span>
             <Button
               variant="primary"

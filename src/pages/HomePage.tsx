@@ -5,7 +5,11 @@ import { SelectBtn, StudyCheck } from "@/components";
 import { Cat, Check, IconSmaller, RewardChest, OpenChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
 import { useState } from "react";
-import { useDetailRoadmap, useRoadmap } from "@/hooks/useRoadmapApi";
+import {
+  useDetailRoadmap,
+  useRoadmap,
+  useRoadmapChapters,
+} from "@/hooks/useRoadmapApi";
 import toast from "react-hot-toast";
 
 export const HomePage = () => {
@@ -13,6 +17,9 @@ export const HomePage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const { data, isLoading } = useRoadmap();
   const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
+  const { data: Chapters } = useRoadmapChapters(RoadDetail?.roadmap.id);
+
+  console.log(Chapters);
   if (isLoading)
     return (
       <div
@@ -72,7 +79,7 @@ export const HomePage = () => {
               {RoadDetail?.roadmap.category_name}
             </span>
             <span style={{ ...theme.font.t1, color: theme.color.white }}>
-              {RoadDetail?.roadmap.title}
+              {Chapters?.[0].title}
             </span>
           </Title>
           <Dots>
@@ -150,20 +157,17 @@ export const HomePage = () => {
         <div
           style={{ width: "400px", height: "1px", backgroundColor: "black" }}
         />
-
-        <SelectBtn
-          key={RoadDetail?.roadmap.id}
-          width="400px"
-          children={RoadDetail?.roadmap.title}
-          children2={
-            RoadDetail?.roadmap.is_completed ? (
-              <img src={Check} alt="" />
-            ) : (
-              <CheckDiv />
-            )
-          }
-          active={RoadDetail?.roadmap.is_completed}
-        />
+        {Chapters?.map((chapter) => (
+          <SelectBtn
+            key={chapter.id}
+            width="400px"
+            children={chapter.title}
+            children2={
+              chapter.is_completed ? <img src={Check} alt="" /> : <CheckDiv />
+            }
+            active={chapter.is_completed}
+          />
+        ))}
       </RoadMap>
       {showConfetti && <Confetti />}
     </Wrapper>

@@ -1,10 +1,68 @@
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
-import { Button, Input } from "@/components";
+import { Button, CorrectModal, Input } from "@/components";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useRoadmap, useDetailRoadmap } from "@/hooks";
+import { useNavigate } from "react-router-dom";
+import { useSolveProblem } from "@/hooks/useProblemApi";
 
 export const BlankProblem = () => {
+  const problems = ["blankProblem", "defineProblem", "selectProblem"];
+  const navigate = useNavigate();
+  const handleClick = () => {
+    const randomUrl = problems[Math.floor(Math.random() * problems.length)];
+    navigate(`/${randomUrl}/${idx}`);
+  };
+  const [modalOpen, setModalOpen] = useState(false);
   const [answer, setAnswer] = useState("");
+  const { mutate, data: solveData } = useSolveProblem();
+
+  const { idx } = useParams();
+
+  const { data, isLoading } = useRoadmap();
+  const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
+
+  if (isLoading)
+    return (
+      <div
+        style={{
+          ...theme.font.h2,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+        }}
+      >
+        Loading...
+      </div>
+    );
+
+  const problem =
+    Number(idx) === 0
+      ? RoadDetail?.problems?.easy
+      : Number(idx) === 1
+      ? RoadDetail?.problems?.medium
+      : RoadDetail?.problems?.hard;
+
+  const filterProblem = problem?.filter((item) => item.type === "BLANK_CHOICE");
+
+  const currentProblem = filterProblem?.[0];
+  const parts = currentProblem?.content?.split("____");
+
+  const onSubmit = () => {
+    mutate({ problemId: currentProblem?.id, answer });
+    setModalOpen(true);
+  };
+
+  if (!currentProblem || !parts || parts.length < 2) {
+    return (
+      <Wrapper>
+        <span style={theme.font.h2}>문제를 불러올 수 없습니다.</span>
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper>
@@ -12,8 +70,7 @@ export const BlankProblem = () => {
       <Contents>
         <Problem>
           <span style={{ ...theme.font.h4, lineHeight: "200%" }}>
-            데이터를 일시적으로 저장하는 메모리 영역으로, 후입선출(LIFO)
-            방식으로 동작하는 자료구조를
+            {parts[0]}
             <span style={{ margin: "0px 20px" }}>
               <Input
                 placeholder="답 입력"
@@ -22,16 +79,26 @@ export const BlankProblem = () => {
                 value={answer}
               />
             </span>
-            라고 한다.
+            {parts[1]}
           </span>
         </Problem>
       </Contents>
       <Buttons>
-        <Button size="small" variant="secondary">
+        <Button size="small" variant="secondary" onClick={handleClick}>
           건너뛰기
         </Button>
-        <Button size="small">제출하기</Button>
+        <Button size="small" onClick={onSubmit}>
+          제출하기
+        </Button>
       </Buttons>
+      <CorrectModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        type={solveData?.is_correct ? "correct" : "wrong"}
+        answer={answer}
+        correctAnswer={solveData?.correct_answer}
+        getXP={solveData?.xp_earned}
+      />
     </Wrapper>
   );
 };

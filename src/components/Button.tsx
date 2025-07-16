@@ -14,24 +14,20 @@ export const Button = ({
   variant = "primary",
   size = "medium",
   children,
-  isSelected: propIsSelected, // Rename to avoid conflict with internal state
+  isSelected, // Directly use the prop
   onClick,
   ...props
 }: ButtonProps) => {
-  const [internalIsSelected, setInternalIsSelected] = useState(
-    propIsSelected || false
-  );
+  // No internal state for isSelected
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (variant === "tertiary") {
-      setInternalIsSelected((prev) => !prev);
-    }
-    onClick?.(event); // Call original onClick if provided
+    // Only call original onClick, no internal state toggling
+    onClick?.(event);
   };
 
   let processedChildren = children;
   if (typeof children === "string") {
-    const chunkSize = 30;
+    const chunkSize = 10;
     const parts = [];
     for (let i = 0; i < children.length; i += chunkSize) {
       parts.push(children.substring(i, i + chunkSize));
@@ -48,7 +44,7 @@ export const Button = ({
     <StyledButton
       variant={variant}
       size={size}
-      isSelected={variant === "tertiary" ? internalIsSelected : propIsSelected}
+      isSelected={isSelected} // Always use the prop for isSelected
       onClick={handleClick}
       {...props}
     >

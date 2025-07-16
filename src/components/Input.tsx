@@ -15,7 +15,7 @@ export const Input = ({ width, ...props }: InputProps) => {
       case "medium":
         return "200px";
       case "large":
-        return "300px";
+        return "700px";
       default:
         return "100%";
     }
