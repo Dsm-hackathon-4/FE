@@ -1,20 +1,12 @@
 import { LeaderboardIcon, Rank1, Rank2, Rank3, UserIcon } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
+import { useRankingApi } from "@/hooks";
 
 export const RankPage = () => {
-  const rank = [
-    { rank: 1, name: "김철수", xp: 1000, rankIcon: Rank1 },
-    { rank: 2, name: "이영희", xp: 900, rankIcon: Rank2 },
-    { rank: 3, name: "박민수", xp: 800, rankIcon: Rank3 },
-    { rank: 4, name: "최영희", xp: 700 },
-    { rank: 5, name: "김민수", xp: 600 },
-    { rank: 6, name: "이영희", xp: 500 },
-    { rank: 7, name: "박민수", xp: 400 },
-    { rank: 8, name: "최영희", xp: 300 },
-    { rank: 9, name: "김민수", xp: 200 },
-    { rank: 10, name: "이영희", xp: 100 },
-  ];
+  const { data } = useRankingApi();
+  console.log(data);
+
   return (
     <Wrapper>
       <Title>
@@ -31,41 +23,59 @@ export const RankPage = () => {
       >
         <Leaderboard>
           <img src={LeaderboardIcon} alt="" />
-          {rank.slice(0, 3).map((item) => (
+          {data?.rankings.slice(0, 3).map((item) => (
             <TopRanker key={item.rank} rank={item.rank}>
               <img
-                src={UserIcon}
+                src={item.profile_image_url}
                 alt=""
                 style={{ width: "60px", height: "60px", borderRadius: "50%" }}
               />
               <span style={theme.font.t1}>{item.name}</span>
-              <span style={theme.font.b1}>{item.xp} XP</span>
+              <span style={theme.font.b1}>{item.total_xp} XP</span>
             </TopRanker>
           ))}
         </Leaderboard>
         <Rank>
-          {rank.map((item) => (
+          {data?.rankings.map((item) => (
             <RankItem key={item.rank}>
               <User>
-                {item.rankIcon && (
+                {item.rank === 1 && (
                   <img
-                    src={item.rankIcon}
+                    src={Rank1}
                     alt=""
                     style={{ width: "30px", height: "30px" }}
                   />
                 )}
-                {!item.rankIcon && <Ranking>{item.rank}</Ranking>}
+                {item.rank === 2 && (
+                  <img
+                    src={Rank2}
+                    alt=""
+                    style={{ width: "30px", height: "30px" }}
+                  />
+                )}
+                {item.rank === 3 && (
+                  <img
+                    src={Rank3}
+                    alt=""
+                    style={{ width: "30px", height: "30px" }}
+                  />
+                )}
+                {item.rank > 3 && <Ranking>{item.rank}</Ranking>}
                 <Info>
                   <img
-                    src={UserIcon}
+                    src={item.profile_image_url}
                     alt=""
-                    style={{ width: "50px", height: "50px" }}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
                   />
                   <span style={theme.font.t2}>{item.name}</span>
                 </Info>
               </User>
               <span style={{ ...theme.font.t2, color: theme.color.zinc[400] }}>
-                {item.xp} XP
+                {item.total_xp} XP
               </span>
             </RankItem>
           ))}
