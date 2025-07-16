@@ -5,45 +5,32 @@ import { SelectBtn, StudyCheck } from "@/components";
 import { Cat, Check, IconSmaller, RewardChest, OpenChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
 import { useState } from "react";
+import { useDetailRoadmap, useRoadmap } from "@/hooks/useRoadmapApi";
+import toast from "react-hot-toast";
 
 export const HomePage = () => {
   const [openedChests, setOpenedChests] = useState<Set<number>>(new Set());
   const [showConfetti, setShowConfetti] = useState(false);
-  const dots = [
-    true,
-    true,
-    true,
-    "reward",
-    false,
-    false,
-    false,
-    "reward",
-    false,
-    false,
-    false,
-    "reward",
-    false,
-    false,
-    false,
-    "reward",
-    false,
-    false,
-    false,
-    "reward",
-  ];
-  const Road = [
-    { road: "데이터베이스 개요", done: true },
-    { road: "DBMS (Database Management System)", done: true },
-    { road: "ERD (Entity-Relationship Diagram)", done: false },
-    { road: "관계형 데이터베이스와 무결성 제약조건", done: false },
-    { road: "SQL (Structured Query Language)", done: false },
-    { road: "쿼리 최적화 및 튜닝", done: false },
-    { road: "정규화 (Normalization)", done: false },
-    { road: "병행 수행 제어 (Concurrency Control)", done: false },
-    { road: "회복 (Recovery)", done: false },
-    { road: "빅데이터 (Big Data)", done: false },
-    { road: "데이터베이스 보안 (Database Security)", done: false },
-  ];
+  const { data, isLoading } = useRoadmap();
+  const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
+  if (isLoading)
+    return (
+      <div
+        style={{
+          ...theme.font.h2,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        Loading...
+      </div>
+    );
+  console.log(RoadDetail);
+  const dots = [false, false, false, "reward"];
+
   const pattern = [
     "center",
     "left",
@@ -82,30 +69,39 @@ export const HomePage = () => {
         <Study>
           <Title>
             <span style={{ ...theme.font.b1, color: theme.color.white }}>
-              데이터베이스 챕터 3
+              {RoadDetail?.roadmap.category_name}
             </span>
             <span style={{ ...theme.font.t1, color: theme.color.white }}>
-              SQL 마스터하기
+              {RoadDetail?.roadmap.title}
             </span>
           </Title>
           <Dots>
             {dots.map((done, idx) => {
               const isShowBaloon =
-                dots[idx] === false &&
-                (dots[idx - 1] === true || dots[idx - 1] === "reward") &&
-                dots[idx - 2] !== false;
+                (idx === 0 && dots[0] === false) || // 첫 번째일 때 무조건 false면 보여줘
+                (dots[idx] === false &&
+                  (dots[idx - 1] === true || dots[idx - 1] === "reward") &&
+                  dots[idx - 2] !== false);
               return done === "reward" ? (
                 <StyledRewardChest
                   src={openedChests.has(idx) ? OpenChest : RewardChest}
                   alt=""
                   offset={offsets[idx]}
                   onClick={() => {
-                    if (!openedChests.has(idx)) {
-                      // Only trigger if not already opened
-                      setOpenedChests((prev) => new Set(prev.add(idx)));
-                      setShowConfetti(true);
-                      setTimeout(() => setShowConfetti(false), 3000); // Show confetti for 3 seconds
+                    // 이미 열린 상자이면 아무것도 하지 않음
+                    if (openedChests.has(idx)) {
+                      return;
                     }
+
+                    // 이전 dot이 유효하고 false이면 열 수 없음
+                    if (idx > 0 && dots[idx - 1] === false) {
+                      toast.error("이전 단계를 완료해야 상자를 열 수 있습니다.");
+                      return;
+                    }
+
+                    setOpenedChests((prev) => new Set(prev.add(idx)));
+                    setShowConfetti(true);
+                    setTimeout(() => setShowConfetti(false), 3000);
                   }}
                 />
               ) : (
@@ -117,8 +113,8 @@ export const HomePage = () => {
                   />
                   {isShowBaloon && (
                     <Baloon
-                      children="SQL 마스터하기"
-                      children2="SQL을 열심히 공부해서 실력을 향상시키세요."
+                      children={RoadDetail?.roadmap.title}
+                      children2="열심히 공부해서 실력을 향상시키세요."
                       offset={offsets[idx]}
                     />
                   )}
@@ -145,19 +141,26 @@ export const HomePage = () => {
         />
       </Contents>
       <RoadMap>
-        <span style={{ ...theme.font.h4 }}>데이터베이스 로드맵</span>
+        <span style={{ ...theme.font.h4 }}>
+          {RoadDetail?.roadmap.category_name} 로드맵
+        </span>
         <div
           style={{ width: "400px", height: "1px", backgroundColor: "black" }}
         />
-        {Road.map((road, idx) => (
-          <SelectBtn
-            key={idx}
-            width="400px"
-            children={road.road}
-            children2={road.done ? <img src={Check} alt="" /> : <CheckDiv />}
-            active={road.done}
-          />
-        ))}
+
+        <SelectBtn
+          key={RoadDetail?.roadmap.id}
+          width="400px"
+          children={RoadDetail?.roadmap.title}
+          children2={
+            RoadDetail?.roadmap.is_completed ? (
+              <img src={Check} alt="" />
+            ) : (
+              <CheckDiv />
+            )
+          }
+          active={RoadDetail?.roadmap.is_completed}
+        />
       </RoadMap>
       {showConfetti && <Confetti />}
     </Wrapper>
