@@ -39,3 +39,4 @@ export { default as Rank3 } from "./rank3.svg";
 export { default as Fish } from "./fish.svg";
 export { default as Thread } from "./thread.svg";
 export { default as OpenChest } from "./openChest.svg";
+export { default as LeaderboardIcon } from "./leaderboard.svg";
