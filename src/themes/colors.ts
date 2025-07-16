@@ -32,4 +32,7 @@ export const color = {
   primary: "#92D2FF",
   primary2: "#92B1FF",
   til: "#102C73",
+  xp: "#DBEAFE",
+  rank: "#FEF9C3",
+  continuous: "#FFEDD5",
 };
