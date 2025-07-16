@@ -3,8 +3,8 @@ import styled from "@emotion/styled";
 import { theme } from "@/themes";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "tertiary";
-  size?: "small" | "medium" | "large";
+  variant?: "primary" | "secondary" | "tertiary" | "tertiary2";
+  size?: "small" | "medium" | "large" | "result";
   children: React.ReactNode;
   isSelected?: boolean; // For tertiary variant
 }
@@ -42,8 +42,8 @@ export const Button = ({
 };
 
 const StyledButton = styled.button<{
-  variant: "primary" | "secondary" | "tertiary";
-  size: "small" | "medium" | "large";
+  variant: "primary" | "secondary" | "tertiary" | "tertiary2";
+  size: "small" | "medium" | "large" | "result";
   isSelected?: boolean;
 }>`
   border-radius: 20px;
@@ -91,6 +91,16 @@ const StyledButton = styled.button<{
             };
           }
         `;
+      case "tertiary2":
+        return `
+          background: linear-gradient(90deg, #A855F7 0%, #EC4899 100%);    
+          color: ${theme.color.white};
+          border: none;
+          
+          &:hover {
+            background-color: ${theme.color.zinc[100]};
+          }
+        `;
       default:
         return ``;
     }
@@ -122,6 +132,14 @@ const StyledButton = styled.button<{
           font-weight: ${theme.font.t2.fontWeight};
           font-size: ${theme.font.t2.fontSize};
           line-height: ${theme.font.t2.lineHeight};
+        `;
+      case "result":
+        return `
+          padding: 15px 149px 15px 149px;
+          font-family: ${theme.font.b1.fontFamily};
+          font-weight: ${theme.font.b1.fontWeight};
+          font-size: ${theme.font.b1.fontSize};
+          line-height: ${theme.font.b1.lineHeight};
         `;
       default:
         return ``;

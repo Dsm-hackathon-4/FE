@@ -13,6 +13,7 @@ import {
   BlankProblem,
   DefineProblem,
   SelectProblem,
+  ResultPage,
 } from "@/pages";
 import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
         element: <LinkReviewPage />,
       },
     ],
+  },
+  {
+    path: "result",
+    element: <ResultPage />,
   },
 ]);
 
