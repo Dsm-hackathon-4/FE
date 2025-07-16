@@ -20,3 +20,5 @@ export { default as Continuous } from "./continuous.svg";
 export { default as Xp } from "./xp.svg";
 export { default as Rank } from "./rank.svg";
 export { default as Cat } from "./cat.svg";
+export { default as WrongIcon } from "./wrong.svg";
+export { default as HardIcon } from "./hardIcon.svg";
