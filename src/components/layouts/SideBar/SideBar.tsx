@@ -76,7 +76,7 @@ const LogoImg = styled.img`
 const Wrapper = styled.div`
   width: 325px; /* 사이드바 너비 */
   height: 100vh; /* 전체 높이 */
-  border: 3px solid ${theme.color.zinc[200]};
+  border: 1px solid ${theme.color.zinc[200]};
   position: fixed;
   top: 0;
   left: 0;

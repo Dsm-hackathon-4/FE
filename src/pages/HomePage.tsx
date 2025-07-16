@@ -100,9 +100,12 @@ export const HomePage = () => {
                   alt=""
                   offset={offsets[idx]}
                   onClick={() => {
-                    setOpenedChests((prev) => new Set(prev.add(idx)));
-                    setShowConfetti(true);
-                    setTimeout(() => setShowConfetti(false), 3000); // Show confetti for 3 seconds
+                    if (!openedChests.has(idx)) {
+                      // Only trigger if not already opened
+                      setOpenedChests((prev) => new Set(prev.add(idx)));
+                      setShowConfetti(true);
+                      setTimeout(() => setShowConfetti(false), 3000); // Show confetti for 3 seconds
+                    }
                   }}
                 />
               ) : (
@@ -228,6 +231,8 @@ const StyledRewardChest = styled.img<{ offset: number }>`
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   transform: ${(props) => `translateX(${props.offset * 80}px)`};
+  width: 100px; /* Fixed width */
+  height: 100px; /* Fixed height */
   &:hover {
     transform: ${(props) => `translateX(${props.offset * 80}px) scale(1.05)`};
   }
@@ -278,7 +283,7 @@ const ConfettiPiece = styled.div<{
   opacity: 0;
   animation: ${confettiFall} ${(props) => props.duration}s ease-out forwards;
   animation-delay: ${(props) => props.delay}s;
-  left: ${(props) => Math.random() * 100}vw;
+  left: ${Math.random() * 100}vw;
   top: -${(props) => props.size}px;
 `;
 
