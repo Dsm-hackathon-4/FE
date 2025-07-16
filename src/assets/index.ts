@@ -22,3 +22,7 @@ export { default as Rank } from "./rank.svg";
 export { default as Cat } from "./cat.svg";
 export { default as WrongIcon } from "./wrong.svg";
 export { default as HardIcon } from "./hardIcon.svg";
+export { default as RightArrow } from "./rightArrow.svg";
+export { default as Github } from "./github.svg";
+export { default as Obsidian } from "./obsidian.svg";
+export { default as Notion } from "./notion.svg";
