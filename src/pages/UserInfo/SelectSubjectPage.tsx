@@ -2,6 +2,8 @@ import { Database, License, Logo, Network, Os } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { Wrapper } from "./LoginPage";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface SubjectProps {
   color: string;
@@ -9,6 +11,15 @@ interface SubjectProps {
 }
 
 export const SelectSubjectPage = () => {
+  const navigate = useNavigate();
+  const handleSubjectClick = (subjectName: string) => {
+    if (subjectName !== "데이터베이스") {
+      toast.error("미구현중인 개발입니다");
+    } else {
+      navigate("/selectAbility");
+    }
+  };
+
   const subject = [
     {
       name: "데이터베이스",
@@ -42,7 +53,12 @@ export const SelectSubjectPage = () => {
         <span>어떤 과목을 공부해보고 싶으신가요?</span>
         <SubjectDiv>
           {subject.map((data, index) => (
-            <Subject key={index} color={data.color} text={data.text}>
+            <Subject
+              key={index}
+              color={data.color}
+              text={data.text}
+              onClick={() => handleSubjectClick(data.name)}
+            >
               <img src={data.icon} alt="" />
               {data.name}
             </Subject>

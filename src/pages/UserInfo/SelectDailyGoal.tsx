@@ -3,8 +3,10 @@ import { Wrapper } from "./LoginPage";
 import { SelectBtn } from "@/components";
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
+import { useNavigate } from "react-router-dom";
 
 export const SelectDailyGoalPage = () => {
+  const navigate = useNavigate();
   const selectList = [
     { text: "하루 5분", Strength: "가볍게" },
     { text: "하루 10분", Strength: "보통" },
@@ -23,6 +25,7 @@ export const SelectDailyGoalPage = () => {
               key={index}
               children={data.text}
               children2={data.Strength}
+              onClick={() => navigate("/selectStudyType")}
             />
           ))}
         </BtnDiv>

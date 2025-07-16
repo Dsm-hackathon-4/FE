@@ -2,8 +2,10 @@ import { Wrapper } from "./LoginPage";
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
 import { Logo } from "@/assets";
+import { useNavigate } from "react-router-dom";
 
 export const SelectStudyTypePage = () => {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <img src={Logo} alt="" />
@@ -11,14 +13,14 @@ export const SelectStudyTypePage = () => {
         <span>어떤 방식으로 학습을 시작할까요?</span>
         <SelectDiv>
           <Select color={theme.color.primary}>
-            <Contents>
+            <Contents onClick={() => navigate("/")}>
               <span style={{ ...theme.font.t1 }}>기초부터 시작하기</span>
               <span>CS 과정의 가장 쉬운 레슨부터 시작합니다!</span>
             </Contents>
             <span style={{ ...theme.font.h1 }}>☝️</span>
           </Select>
           <Select color={theme.color.primary2}>
-            <Contents>
+            <Contents onClick={() => navigate("/")}>
               <span style={{ ...theme.font.t1 }}>내 레벨 찾기</span>
               <span>학습 시작 지점을 추천해드려요!</span>
             </Contents>

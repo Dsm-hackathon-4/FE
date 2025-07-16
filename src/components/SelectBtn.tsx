@@ -7,6 +7,7 @@ interface SelectBtnProps {
   children2?: string | JSX.Element;
   width?: string;
   active?: boolean;
+  onClick?: () => void;
 }
 
 export const SelectBtn = ({
@@ -14,9 +15,15 @@ export const SelectBtn = ({
   children2,
   width,
   active,
+  onClick,
 }: SelectBtnProps) => {
   return (
-    <Wrapper children2={children2} width={width} active={active}>
+    <Wrapper
+      children2={children2}
+      width={width}
+      active={active}
+      onClick={onClick}
+    >
       <span>{children}</span>
       {children2 && <span>{children2}</span>}
     </Wrapper>

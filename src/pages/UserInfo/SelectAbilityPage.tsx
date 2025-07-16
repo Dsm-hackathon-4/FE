@@ -3,8 +3,10 @@ import { Wrapper } from "./LoginPage";
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
 import { SelectBtn } from "@/components";
+import { useNavigate } from "react-router-dom";
 
 export const SelectAbilityPage = () => {
+  const navigate = useNavigate();
   const selectList = [
     "CS를 처음 배워요",
     "자주 사용되는 용어를 알고 있어요",
@@ -19,7 +21,9 @@ export const SelectAbilityPage = () => {
         <span>CS를 얼마나 알고 계시나요?</span>
         <BtnDiv>
           {selectList.map((data, index) => (
-            <SelectBtn key={index}>{data}</SelectBtn>
+            <SelectBtn key={index} onClick={() => navigate("/selectDailyGoal")}>
+              {data}
+            </SelectBtn>
           ))}
         </BtnDiv>
       </Container>
