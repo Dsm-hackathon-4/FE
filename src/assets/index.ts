@@ -30,3 +30,5 @@ export { default as ResultIcon } from "./resultIcon.svg";
 export { default as Star } from "./star.svg";
 export { default as Correct } from "./correct.svg";
 export { default as ResultCheck } from "./resultCheck.svg";
+export { default as CorrectCheck } from "./correctCheck.svg";
+export { default as Fail } from "./fail.svg";
