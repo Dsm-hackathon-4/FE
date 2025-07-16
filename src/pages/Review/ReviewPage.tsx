@@ -1,8 +1,10 @@
 import { Mascot, HardIcon, WrongIcon } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 
 export const ReviewPage = () => {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <Title>
@@ -10,7 +12,7 @@ export const ReviewPage = () => {
       </Title>
       <Contents>
         <Til>
-          <TilContents>
+          <TilContents onClick={() => navigate("link")}>
             <span style={{ ...theme.font.h1, color: theme.color.white }}>
               TIL과 함께 복습하기
             </span>
