@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "small" | "medium" | "large" | "result";
   children: React.ReactNode;
   isSelected?: boolean; // For tertiary variant
+  width?: string; // New width prop
 }
 
 export const Button = ({
@@ -28,6 +29,21 @@ export const Button = ({
     onClick?.(event); // Call original onClick if provided
   };
 
+  let processedChildren = children;
+  if (typeof children === "string") {
+    const chunkSize = 30;
+    const parts = [];
+    for (let i = 0; i < children.length; i += chunkSize) {
+      parts.push(children.substring(i, i + chunkSize));
+    }
+    processedChildren = parts.map((part, index) => (
+      <React.Fragment key={index}>
+        {part}
+        {index < parts.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  }
+
   return (
     <StyledButton
       variant={variant}
@@ -36,7 +52,7 @@ export const Button = ({
       onClick={handleClick}
       {...props}
     >
-      {children}
+      {processedChildren}
     </StyledButton>
   );
 };
@@ -45,11 +61,16 @@ const StyledButton = styled.button<{
   variant: "primary" | "secondary" | "tertiary" | "tertiary2";
   size: "small" | "medium" | "large" | "result";
   isSelected?: boolean;
+  width?: string;
 }>`
   border-radius: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease, border 0.3s ease, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: background-color 0.3s ease, border 0.3s ease,
+    transform 0.2s ease-out, box-shadow 0.2s ease-out;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: ${(props) => props.width || "auto"};
+  white-space: normal; /* Allow text to wrap */
+  text-align: center; /* Center wrapped text */
 
   &:hover {
     transform: translateY(-2px);
