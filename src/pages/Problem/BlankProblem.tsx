@@ -27,16 +27,16 @@ export const BlankProblem = () => {
         </Problem>
       </Contents>
       <Buttons>
-        <Button size="medium" variant="secondary">
+        <Button size="small" variant="secondary">
           건너뛰기
         </Button>
-        <Button size="medium">제출하기</Button>
+        <Button size="small">제출하기</Button>
       </Buttons>
     </Wrapper>
   );
 };
 
-const Buttons = styled.div`
+export const Buttons = styled.div`
   display: flex;
   gap: 53px;
 `;
