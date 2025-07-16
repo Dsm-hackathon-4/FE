@@ -15,3 +15,8 @@ export { default as IconSmaller } from "./iconSmaller.svg";
 export { default as RewardChest } from "./rewardChest.svg";
 export { default as Check } from "./checkIcon.svg";
 export { default as Mascot } from "./mascot.svg";
+export { default as UserIcon } from "./user.svg";
+export { default as Continuous } from "./continuous.svg";
+export { default as Xp } from "./xp.svg";
+export { default as Rank } from "./rank.svg";
+export { default as Cat } from "./cat.svg";
