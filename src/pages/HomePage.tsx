@@ -1,11 +1,12 @@
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 import { SelectBtn, StudyCheck } from "@/components";
 import { Cat, Check, IconSmaller, RewardChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
 
 export const HomePage = () => {
-  const dots = [true, true, false, "reward"];
+  const dots = [true, true, true, "reward"];
   const Road = [
     { road: "데이터베이스 개요", done: true },
     { road: "DBMS (Database Management System)", done: true },
@@ -69,13 +70,10 @@ export const HomePage = () => {
                 (idx === 0 && done === false) ||
                 (done === false && dots[idx - 1] === true);
               return done === "reward" ? (
-                <img
+                <StyledRewardChest
                   src={RewardChest}
                   alt=""
-                  style={{
-                    transform: `translateX(${offsets[idx] * 80}px)`,
-                    cursor: "pointer",
-                  }}
+                  offset={offsets[idx]}
                 />
               ) : (
                 <DotWrapper>
@@ -96,24 +94,18 @@ export const HomePage = () => {
             })}
           </Dots>
         </Study>
-        <img
+        <StyledIconSmaller
           src={IconSmaller}
           alt=""
           style={{
-            width: "217px",
-            height: "217px",
-            position: "absolute",
             left: "50%",
             top: "50%",
           }}
         />
-        <img
+        <StyledCat
           src={Cat}
           alt=""
           style={{
-            width: "217px",
-            height: "217px",
-            position: "absolute",
             left: "20%",
             top: "30%",
           }}
@@ -199,4 +191,33 @@ const Wrapper = styled.div`
   justify-content: center;
   gap: 132px;
   padding-top: 86px;
+`;
+
+const StyledRewardChest = styled.img<{ offset: number }>`
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  transform: ${(props) => `translateX(${props.offset * 80}px)`};
+  &:hover {
+    transform: ${(props) => `translateX(${props.offset * 80}px) scale(1.05)`};
+  }
+`;
+
+const floating = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`;
+
+const StyledIconSmaller = styled.img`
+  width: 217px;
+  height: 217px;
+  position: absolute;
+  animation: ${floating} 3s ease-in-out infinite;
+`;
+
+const StyledCat = styled.img`
+  width: 217px;
+  height: 217px;
+  position: absolute;
+  animation: ${floating} 4s ease-in-out infinite; /* Different duration for variety */
 `;

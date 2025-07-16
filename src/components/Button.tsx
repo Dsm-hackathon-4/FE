@@ -48,8 +48,13 @@ const StyledButton = styled.button<{
 }>`
   border-radius: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease, border 0.3s ease;
+  transition: background-color 0.3s ease, border 0.3s ease, transform 0.2s ease-out, box-shadow 0.2s ease-out;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+  }
 
   // Variant styles
   ${(props) => {
@@ -98,7 +103,7 @@ const StyledButton = styled.button<{
           border: none;
           
           &:hover {
-            background-color: ${theme.color.zinc[100]};
+            opacity: 0.8;
           }
         `;
       default:
