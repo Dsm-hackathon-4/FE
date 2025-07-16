@@ -32,3 +32,5 @@ export { default as Correct } from "./correct.svg";
 export { default as ResultCheck } from "./resultCheck.svg";
 export { default as CorrectCheck } from "./correctCheck.svg";
 export { default as Fail } from "./fail.svg";
+export { default as LogoIcon } from "./logoIcon.svg";
+export { default as CodeLingo } from "./codeLingo.svg";
