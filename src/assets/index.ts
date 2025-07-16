@@ -26,3 +26,7 @@ export { default as RightArrow } from "./rightArrow.svg";
 export { default as Github } from "./github.svg";
 export { default as Obsidian } from "./obsidian.svg";
 export { default as Notion } from "./notion.svg";
+export { default as ResultIcon } from "./resultIcon.svg";
+export { default as Star } from "./star.svg";
+export { default as Correct } from "./correct.svg";
+export { default as ResultCheck } from "./resultCheck.svg";
