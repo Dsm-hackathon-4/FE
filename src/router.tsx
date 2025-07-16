@@ -10,6 +10,9 @@ import {
   ProfilePage,
   ReviewPage,
   LinkReviewPage,
+  BlankProblem,
+  DefineProblem,
+  SelectProblem,
 } from "@/pages";
 import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
@@ -18,7 +21,7 @@ const router = createBrowserRouter([
     element: <HeaderLayout />,
     children: [
       {
-        path: "/login",
+        path: "login",
         element: <LoginPage />,
       },
       {
@@ -36,6 +39,18 @@ const router = createBrowserRouter([
       {
         path: "selectStudyType",
         element: <SelectStudyTypePage />,
+      },
+      {
+        path: "blankProblem",
+        element: <BlankProblem />,
+      },
+      {
+        path: "defineProblem",
+        element: <DefineProblem />,
+      },
+      {
+        path: "selectProblem",
+        element: <SelectProblem />,
       },
     ],
   },
