@@ -22,7 +22,22 @@ export const BlankProblem = () => {
 
   const { data, isLoading } = useRoadmap();
   const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
+  const problem =
+    Number(idx) === 0
+      ? RoadDetail?.problems?.easy
+      : Number(idx) === 1
+      ? RoadDetail?.problems?.medium
+      : RoadDetail?.problems?.hard;
 
+  const filterProblem = problem?.filter((item) => item.type === "SUBJECTIVE");
+
+  const [currentProblem] = useState(() => {
+    if (filterProblem && filterProblem.length > 0) {
+      const randomIndex = Math.floor(Math.random() * filterProblem.length);
+      return filterProblem[randomIndex];
+    }
+    return null;
+  });
   if (isLoading)
     return (
       <div
@@ -39,16 +54,6 @@ export const BlankProblem = () => {
       </div>
     );
 
-  const problem =
-    Number(idx) === 0
-      ? RoadDetail?.problems?.easy
-      : Number(idx) === 1
-      ? RoadDetail?.problems?.medium
-      : RoadDetail?.problems?.hard;
-
-  const filterProblem = problem?.filter((item) => item.type === "BLANK_CHOICE");
-
-  const currentProblem = filterProblem?.[0];
   const parts = currentProblem?.content?.split("____");
 
   const onSubmit = () => {
@@ -98,6 +103,7 @@ export const BlankProblem = () => {
         answer={answer}
         correctAnswer={solveData?.correct_answer}
         getXP={solveData?.xp_earned}
+        idx={idx}
       />
     </Wrapper>
   );

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { theme } from "@/themes";
 import { CorrectCheck, Fail } from "@/assets";
 import { Button } from "../Button";
+import { useNavigate } from "react-router-dom";
 
 interface CorrectModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface CorrectModalProps {
   answer: string;
   correctAnswer: string;
   getXP: number;
+  idx: string;
 }
 
 export const CorrectModal = ({
@@ -19,8 +21,17 @@ export const CorrectModal = ({
   answer,
   correctAnswer,
   getXP,
+  idx,
 }: CorrectModalProps) => {
+  const navigate = useNavigate();
   if (!isOpen) return null;
+  const problems = ["blankProblem", "defineProblem", "selectProblem"];
+
+  const handleClick = () => {
+    const randomUrl = problems[Math.floor(Math.random() * problems.length)];
+    navigate(`/${randomUrl}/${idx}`);
+    onClose();
+  };
 
   return (
     <ModalOverlay onClick={onClose}>
@@ -56,7 +67,7 @@ export const CorrectModal = ({
               size="medium"
               children="다음"
               style={{ whiteSpace: "nowrap" }}
-              onClick={onClose}
+              onClick={handleClick}
             />
           </Footer>
         </Wrapper>

@@ -86,6 +86,7 @@ export const DefineProblem = () => {
         answer={answer}
         correctAnswer={solveData?.correct_answer}
         getXP={solveData?.xp_earned}
+        idx={idx}
       />
     </Wrapper>
   );

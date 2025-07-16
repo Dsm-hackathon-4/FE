@@ -89,9 +89,15 @@ export const SelectProblem = () => {
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           type={solveData?.is_correct ? "correct" : "wrong"}
-          answer={currentProblem.choices[selectedChoiceId - 1].content}
+          answer={
+            selectedChoiceId !== null
+              ? currentProblem?.choices?.find((c) => c.id === selectedChoiceId)
+                  ?.content || ""
+              : ""
+          }
           correctAnswer={solveData?.correct_answer}
           getXP={solveData?.xp_earned}
+          idx={idx}
         />
       </Wrapper>
     </>
