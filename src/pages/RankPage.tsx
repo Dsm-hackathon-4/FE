@@ -1,4 +1,4 @@
-import { LeaderboardIcon, Rank1, Rank2, Rank3, UserIcon } from "@/assets";
+import { LeaderboardIcon, Rank1, Rank2, Rank3 } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { useRankingApi } from "@/hooks";
