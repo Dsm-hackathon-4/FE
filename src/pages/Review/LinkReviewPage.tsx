@@ -1,4 +1,4 @@
-import { Github, Obsidian, Notion, RightArrow } from "@/assets";
+import { Github, Notion, RightArrow } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 
@@ -19,11 +19,7 @@ export const LinkReviewPage = () => {
       icon: Github,
       color: theme.color.github,
     },
-    {
-      name: "Obsidian",
-      icon: Obsidian,
-      color: theme.color.obsidian,
-    },
+
     {
       name: "Notion",
       icon: Notion,
