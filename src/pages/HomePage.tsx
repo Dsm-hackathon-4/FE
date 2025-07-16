@@ -2,10 +2,13 @@ import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import { SelectBtn, StudyCheck } from "@/components";
-import { Cat, Check, IconSmaller, RewardChest } from "@/assets";
+import { Cat, Check, IconSmaller, RewardChest, OpenChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
+import { useState } from "react";
 
 export const HomePage = () => {
+  const [openedChests, setOpenedChests] = useState<Set<number>>(new Set());
+  const [showConfetti, setShowConfetti] = useState(false);
   const dots = [
     true,
     true,
@@ -93,9 +96,14 @@ export const HomePage = () => {
                 dots[idx - 2] !== false;
               return done === "reward" ? (
                 <StyledRewardChest
-                  src={RewardChest}
+                  src={openedChests.has(idx) ? OpenChest : RewardChest}
                   alt=""
                   offset={offsets[idx]}
+                  onClick={() => {
+                    setOpenedChests((prev) => new Set(prev.add(idx)));
+                    setShowConfetti(true);
+                    setTimeout(() => setShowConfetti(false), 3000); // Show confetti for 3 seconds
+                  }}
                 />
               ) : (
                 <DotWrapper>
@@ -148,6 +156,7 @@ export const HomePage = () => {
           />
         ))}
       </RoadMap>
+      {showConfetti && <Confetti />}
     </Wrapper>
   );
 };
@@ -243,3 +252,78 @@ const StyledCat = styled.img`
   position: absolute;
   animation: ${floating} 4s ease-in-out infinite; /* Different duration for variety */
 `;
+
+const confettiFall = keyframes`
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+`;
+
+const ConfettiPiece = styled.div<{
+  color: string;
+  size: number;
+  delay: number;
+  duration: number;
+}>`
+  position: absolute;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
+  background-color: ${(props) => props.color};
+  border-radius: 50%; /* Make some circles */
+  opacity: 0;
+  animation: ${confettiFall} ${(props) => props.duration}s ease-out forwards;
+  animation-delay: ${(props) => props.delay}s;
+  left: ${(props) => Math.random() * 100}vw;
+  top: -${(props) => props.size}px;
+`;
+
+const ConfettiContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+`;
+
+const Confetti = () => {
+  const colors = [
+    theme.color.green[500],
+    theme.color.blue[500],
+    theme.color.red[500],
+    theme.color.yellow[500],
+    theme.color.orange[500],
+  ];
+  const numPieces = 80; // Increased from 30
+
+  return (
+    <ConfettiContainer>
+      {Array.from({ length: numPieces }).map((_, i) => {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 10 + 6; // Increased size range
+        const delay = Math.random() * 0.8; // Slightly longer delay range
+        const duration = Math.random() * 3 + 3; // Longer duration for more visible fall
+        return (
+          <ConfettiPiece
+            key={i}
+            color={color}
+            size={size}
+            delay={delay}
+            duration={duration}
+            style={{
+              borderRadius: Math.random() > 0.5 ? "50%" : "0%",
+              left: `${Math.random() * 100}vw`,
+            }}
+          />
+        );
+      })}
+    </ConfettiContainer>
+  );
+};
