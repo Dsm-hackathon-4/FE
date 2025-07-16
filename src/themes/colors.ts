@@ -37,4 +37,6 @@ export const color = {
   continuous: "#FFEDD5",
   wrong: "#0F4256",
   hard: "#131F24",
+  github: "#14191D",
+  obsidian: "#7C3AED",
 };

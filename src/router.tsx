@@ -9,6 +9,7 @@ import {
   RankPage,
   ProfilePage,
   ReviewPage,
+  LinkReviewPage,
 } from "@/pages";
 import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "review",
         element: <ReviewPage />,
+      },
+      {
+        path: "review/link",
+        element: <LinkReviewPage />,
       },
     ],
   },
