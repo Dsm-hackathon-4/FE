@@ -5,9 +5,21 @@ import { useMyPage } from "@/hooks/useMyPageApi";
 
 export const ProfilePage = () => {
   const { data, isLoading } = useMyPage();
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
+  if (isLoading)
+    return (
+      <div
+        style={{
+          ...theme.font.h2,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        Loading...
+      </div>
+    );
 
   console.log(data);
   const infos = [

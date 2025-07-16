@@ -4,8 +4,23 @@ import styled from "@emotion/styled";
 import { useRankingApi } from "@/hooks";
 
 export const RankPage = () => {
-  const { data } = useRankingApi();
+  const { data, isLoading } = useRankingApi();
   console.log(data);
+  if (isLoading)
+    return (
+      <div
+        style={{
+          ...theme.font.h2,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        Loading...
+      </div>
+    );
 
   return (
     <Wrapper>
