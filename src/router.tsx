@@ -14,6 +14,7 @@ import {
   DefineProblem,
   SelectProblem,
   ResultPage,
+  OAuthSuccessPage,
 } from "@/pages";
 import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
   {
     path: "result",
     element: <ResultPage />,
+  },
+  {
+    path: "/oauth/success",
+    element: <OAuthSuccessPage />,
   },
 ]);
 

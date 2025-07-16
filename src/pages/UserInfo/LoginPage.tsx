@@ -1,19 +1,28 @@
 import { Google, Kakao, Logo } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
+import { getKakaoLoginUrl, getGoogleLoginUrl } from "@/apis/oauth";
 
 export const LoginPage = () => {
+  const handleKakaoLogin = () => {
+    window.location.href = getKakaoLoginUrl();
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = getGoogleLoginUrl();
+  };
+
   return (
     <Wrapper>
       <img src={Logo} alt="" />
       <LoginDiv>
         <span>재미있고 효과적인 무료 CS 공부</span>
         <BtnDiv>
-          <LoginBtn color={theme.color.kakao}>
+          <LoginBtn color={theme.color.kakao} onClick={handleKakaoLogin}>
             <img src={Kakao} alt="Kakao" />
             카카오 로그인
           </LoginBtn>
-          <LoginBtn color={theme.color.zinc[100]}>
+          <LoginBtn color={theme.color.zinc[100]} onClick={handleGoogleLogin}>
             <img src={Google} alt="Google" />
             구글 로그인
           </LoginBtn>

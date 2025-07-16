@@ -3,3 +3,4 @@ export { SelectSubjectPage } from "./SelectSubjectPage";
 export { SelectAbilityPage } from "./SelectAbilityPage";
 export { SelectDailyGoalPage } from "./SelectDailyGoal";
 export { SelectStudyTypePage } from "./SelectStudyType";
+export { OAuthSuccessPage } from "./OAuthSuccessPage";
