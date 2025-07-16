@@ -35,4 +35,6 @@ export const color = {
   xp: "#DBEAFE",
   rank: "#FEF9C3",
   continuous: "#FFEDD5",
+  wrong: "#0F4256",
+  hard: "#131F24",
 };
