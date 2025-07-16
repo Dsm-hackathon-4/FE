@@ -16,9 +16,12 @@ export const SelectProblem = () => {
         type="wrong"
       />
       <Wrapper>
-        <span style={theme.font.h2}>
-          다음 중 후입선출(LIFO) 방식으로 동작하는 자료구조는?
-        </span>
+        <ProblemText style={theme.font.h4}>
+          인터넷에서 컴퓨터들이 서로 통신하기 위해 사용하는 프로토콜로, 데이터를
+          패킷 단위로 나누어 전송하며 신뢰성 있는 연결을 보장하는 전송 계층
+          프로토콜입니다. 3-way handshake를 통해 연결을 설정하고 4-way
+          handshake를 통해 연결을 종료합니다.
+        </ProblemText>
         <Contents>
           <Problem>
             {problem.map((item, index) => (
@@ -63,4 +66,9 @@ const Wrapper = styled.div`
   height: 100vh;
   gap: 84px;
   width: 100%;
+`;
+
+const ProblemText = styled.span`
+  max-width: 1300px;
+  text-align: center;
 `;
