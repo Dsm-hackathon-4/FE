@@ -49,6 +49,6 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  gap: 70px;
+  gap: 84px;
   width: 100%;
 `;
