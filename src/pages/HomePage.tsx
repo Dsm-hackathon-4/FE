@@ -129,7 +129,7 @@ export const HomePage = () => {
           alt=""
           style={{
             left: "20%",
-            top: "30%",
+            top: "20%",
           }}
         />
       </Contents>

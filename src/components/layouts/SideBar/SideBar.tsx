@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
-import { Learning, Logo, Profile, Ranking, Review } from "@/assets";
+import { CodeLingo, Learning, Logo, Profile, Ranking, Review } from "@/assets";
 import { Link, useLocation } from "react-router";
 import { MenuBtn } from "@/components/MenuBtn";
 
@@ -32,14 +32,18 @@ export const SideBar = () => {
     <Wrapper>
       <Title>
         <LogoImg src={Logo} alt="" />
-        <span>서비스 이름</span>
+        <img src={CodeLingo} alt="" />
       </Title>
       <MenuDiv>
         {menuList.map((data, index) => (
           <Link to={data.path} key={index}>
             <MenuBtn
               icon={data.icon}
-              isActive={data.path === '/' ? params.pathname === data.path : params.pathname.startsWith(data.path)}
+              isActive={
+                data.path === "/"
+                  ? params.pathname === data.path
+                  : params.pathname.startsWith(data.path)
+              }
             >
               {data.name}
             </MenuBtn>

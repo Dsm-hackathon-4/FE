@@ -35,11 +35,11 @@ const HeaderWrapper = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 120px; /* Approximate height: 40px top padding + content + 40px bottom padding */
+  height: 120px;
   padding: 40px 50px;
   display: flex;
   align-items: center;
-  z-index: 100; /* Ensure header is above other content */
+  z-index: 100;
 `;
 
 const MainContent = styled.main`
