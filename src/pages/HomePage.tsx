@@ -1,7 +1,7 @@
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { SelectBtn, StudyCheck } from "@/components";
-import { Check, IconSmaller, RewardChest } from "@/assets";
+import { Cat, Check, IconSmaller, RewardChest } from "@/assets";
 
 export const HomePage = () => {
   const dots = [true, true, false, false, false, "reward", false, false, false];
@@ -86,7 +86,24 @@ export const HomePage = () => {
         <img
           src={IconSmaller}
           alt=""
-          style={{ width: "217px", height: "217px" }}
+          style={{
+            width: "217px",
+            height: "217px",
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+          }}
+        />
+        <img
+          src={Cat}
+          alt=""
+          style={{
+            width: "217px",
+            height: "217px",
+            position: "absolute",
+            left: "20%",
+            top: "15%",
+          }}
         />
       </Contents>
       <RoadMap>
@@ -161,5 +178,4 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 132px;
-  padding-top: 86px;
 `;
