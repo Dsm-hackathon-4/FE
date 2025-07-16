@@ -2,15 +2,16 @@ import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { SelectBtn, StudyCheck } from "@/components";
 import { Cat, Check, IconSmaller, RewardChest } from "@/assets";
+import { Baloon } from "@/components/Baloon";
 
 export const HomePage = () => {
-  const dots = [true, true, false, false, false, "reward", false, false, false];
+  const dots = [true, true, true, true, false, "reward"];
   const Road = [
     { road: "데이터베이스 개요", done: true },
     { road: "DBMS (Database Management System)", done: true },
-    { road: "ERD (Entity-Relationship Diagram)", done: true },
-    { road: "관계형 데이터베이스와 무결성 제약조건", done: true },
-    { road: "SQL (Structured Query Language)", done: true },
+    { road: "ERD (Entity-Relationship Diagram)", done: false },
+    { road: "관계형 데이터베이스와 무결성 제약조건", done: false },
+    { road: "SQL (Structured Query Language)", done: false },
     { road: "쿼리 최적화 및 튜닝", done: false },
     { road: "정규화 (Normalization)", done: false },
     { road: "병행 수행 제어 (Concurrency Control)", done: false },
@@ -63,8 +64,11 @@ export const HomePage = () => {
             </span>
           </Title>
           <Dots>
-            {dots.map((done, idx) =>
-              done === "reward" ? (
+            {dots.map((done, idx) => {
+              const isShowBaloon =
+                (idx === 0 && done === false) ||
+                (done === false && dots[idx - 1] === true);
+              return done === "reward" ? (
                 <img
                   src={RewardChest}
                   alt=""
@@ -74,13 +78,22 @@ export const HomePage = () => {
                   }}
                 />
               ) : (
-                <StudyCheck
-                  done={done as boolean}
-                  key={idx}
-                  offset={offsets[idx]}
-                />
-              )
-            )}
+                <DotWrapper>
+                  <StudyCheck
+                    done={done as boolean}
+                    key={idx}
+                    offset={offsets[idx]}
+                  />
+                  {isShowBaloon && (
+                    <Baloon
+                      children="SQL 마스터하기"
+                      children2="SQL을 열심히 공부해서 실력을 향상시키세요."
+                      offset={offsets[idx]}
+                    />
+                  )}
+                </DotWrapper>
+              );
+            })}
           </Dots>
         </Study>
         <img
@@ -102,7 +115,7 @@ export const HomePage = () => {
             height: "217px",
             position: "absolute",
             left: "20%",
-            top: "15%",
+            top: "20%",
           }}
         />
       </Contents>
@@ -124,6 +137,13 @@ export const HomePage = () => {
     </Wrapper>
   );
 };
+
+const DotWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`;
 
 const CheckDiv = styled.div`
   width: 26px;

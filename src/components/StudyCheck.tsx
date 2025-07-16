@@ -27,7 +27,6 @@ const Wrapper = styled.div<StudyCheckProps>`
   cursor: pointer;
   border-bottom: ${(props) =>
     props.done ? `8px solid ${theme.color.green[700]}` : ""};
-
   transform: translateX(${({ offset }) => `${offset * 80}px`});
   transition: transform 0.3s ease;
   &:hover {
