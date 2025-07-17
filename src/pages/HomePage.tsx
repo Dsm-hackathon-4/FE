@@ -94,25 +94,6 @@ export const HomePage = () => {
     );
   }, [openedChests, selectedChapterId]);
 
-  useEffect(() => {
-    if (
-      location.state?.chapterCompleted &&
-      location.key !== processedLocationKey.current &&
-      selectedChapterId !== null
-    ) {
-      setDots((prevDots) => {
-        const newDots = [...prevDots];
-        const firstFalseIdx = newDots.findIndex((dot) => dot === false);
-        if (firstFalseIdx !== -1) {
-          newDots[firstFalseIdx] = true;
-        }
-        return newDots;
-      });
-      processedLocationKey.current = location.key;
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.state, location.key, navigate, selectedChapterId]);
-
   if (isLoading)
     return (
       <div
@@ -249,6 +230,7 @@ export const HomePage = () => {
             onClick={() => {
               setSelectedChapterTitle(chapter.title);
               setSelectedChapterId(chapter.id);
+              localStorage.setItem("selectedChapterId", chapter.id.toString());
             }}
           />
         ))}

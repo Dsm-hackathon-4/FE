@@ -2,12 +2,37 @@ import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { Correct, ResultIcon, Star, ResultCheck } from "@/assets";
 import { Button } from "@/components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { param } = useParams();
   const { chapterComplete } = location.state || {};
+  const handleDone = () => {
+    const savedChapterId = localStorage.getItem("selectedChapterId");
+    const chapterId = savedChapterId ? Number(savedChapterId) : 1;
+
+    const key = `dots_${chapterId}`;
+    const savedDots = localStorage.getItem(key);
+
+    let parsedDots: (boolean | "reward")[] = [false, false, false, "reward"];
+
+    try {
+      parsedDots = savedDots ? JSON.parse(savedDots) : parsedDots;
+    } catch (e) {
+      // 에러 무시
+    }
+
+    // ✅ 가장 가까운 false를 true로
+    const nextFalseIdx = parsedDots.findIndex((dot) => dot === false);
+    if (nextFalseIdx !== -1) {
+      parsedDots[nextFalseIdx] = true;
+      localStorage.setItem(key, JSON.stringify(parsedDots));
+    }
+
+    navigate("/");
+  };
 
   console.log(chapterComplete);
   return (
@@ -60,7 +85,7 @@ export const ResultPage = () => {
             variant="tertiary2"
             size="result"
             style={{ display: "flex", alignItems: "center", gap: "8px" }}
-            onClick={() => navigate("/", { state: { chapterCompleted: true } })}
+            onClick={handleDone}
           >
             <img src={ResultCheck} alt="resultCheck" />
             완료하기

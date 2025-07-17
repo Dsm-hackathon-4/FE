@@ -18,11 +18,19 @@ export const BlankProblem = () => {
   let randomUrl = problems[Math.floor(Math.random() * problems.length)];
   const currentPath = window.location.pathname;
   const handleClick = () => {
-    while (`/${randomUrl}/${idx}/${param}` === currentPath) {
+    while (
+      (idx === "ai"
+        ? `/${randomUrl}/${idx}`
+        : `/${randomUrl}/${idx}/${param}`) === currentPath
+    ) {
       randomUrl = problems[Math.floor(Math.random() * problems.length)];
     }
 
-    navigate(`/${randomUrl}/${idx}/${param}`);
+    if (idx === "ai") {
+      navigate(`/${randomUrl}/${idx}`);
+    } else {
+      navigate(`/${randomUrl}/${idx}/${param}`);
+    }
   };
   const { idx, param } = useParams();
   const params = ["db", "sql", "table", "index"];
@@ -43,8 +51,14 @@ export const BlankProblem = () => {
   }, [solveData, navigate, idx]);
 
   const roadmapId = params.indexOf(param) + 1;
+
+  const shouldFetchChapters = idx !== "ai";
+
   const { data: chapterProblems, isLoading: isDetailRoadmapLoading } =
-    useRoadmapChaptersProblems(1, roadmapId);
+    useRoadmapChaptersProblems(
+      shouldFetchChapters ? 1 : undefined,
+      shouldFetchChapters ? roadmapId : undefined
+    );
 
   console.log(chapterProblems);
   const { data: aiRoadDetail, isLoading: isAiProblemLoading } =
@@ -106,8 +120,9 @@ export const BlankProblem = () => {
   const problemContent = currentProblem?.content || "";
   const parts =
     idx === "ai"
-      ? problemContent.split(/\{\{.*?\}\}/g)
+      ? problemContent.split(/\{\{\s*.*?\s*\}\}/g)
       : problemContent.split("____");
+  console.log(parts);
   const onSubmit = () => {
     if (idx === "ai") {
       solveAiProblem({ problem_id: currentProblem?.id, answer });

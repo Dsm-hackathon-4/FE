@@ -22,11 +22,18 @@ export const SelectProblem = () => {
   let randomUrl = problems[Math.floor(Math.random() * problems.length)];
   const currentPath = window.location.pathname;
   const handleClick = () => {
-    while (`/${randomUrl}/${idx}/${param}` === currentPath) {
+    while (
+      (idx === "ai"
+        ? `/${randomUrl}/${idx}`
+        : `/${randomUrl}/${idx}/${param}`) === currentPath
+    ) {
       randomUrl = problems[Math.floor(Math.random() * problems.length)];
     }
-
-    navigate(`/${randomUrl}/${idx}/${param}`);
+    if (idx === "ai") {
+      navigate(`/${randomUrl}/${idx}`);
+    } else {
+      navigate(`/${randomUrl}/${idx}/${param}`);
+    }
   };
   const params = ["db", "sql", "table", "index"];
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,9 +50,15 @@ export const SelectProblem = () => {
   }, [solveData, navigate]);
 
   const roadmapId = params.indexOf(param) + 1;
+
+  const shouldFetchChapters = idx !== "ai";
+
+  const chapterProblemsData = shouldFetchChapters
+    ? useRoadmapChaptersProblems(1, roadmapId)
+    : { data: null, isLoading: false }; // 👈 조건 충족 안되면 dummy 반환
+
   const { data: chapterProblems, isLoading: isDetailRoadmapLoading } =
-    useRoadmapChaptersProblems(1, roadmapId);
-  console.log(chapterProblems);
+    chapterProblemsData;
 
   const { data: aiRoadDetail, isLoading: isAiProblemLoading } =
     useGetAiProblem();
@@ -57,7 +70,7 @@ export const SelectProblem = () => {
     if (idx === "ai") {
       if (aiRoadDetail && !currentProblem) {
         problemsToConsider = aiRoadDetail?.content || []; // ✅ 이렇게 고쳐야 해
-        targetProblemType = "FILL_BLANK";
+        targetProblemType = "CHOICE";
       }
     } else {
       if (chapterProblems && !currentProblem) {
@@ -145,25 +158,26 @@ export const SelectProblem = () => {
         </ProblemText>
         <Contents>
           <Problem>
-            {currentProblem?.choices.map((item, index) => (
-              <Button
-                variant="tertiary"
-                size="large"
-                key={index}
-                isSelected={
-                  idx === "ai"
-                    ? selectedChoiceId === index
-                    : selectedChoiceId === item.id
-                }
-                onClick={() =>
-                  setSelectedChoiceId(idx === "ai" ? index : item.id)
-                }
-              >
-                <span style={{ width: "100%" }}>
-                  {idx === "ai" ? item : item.content}
-                </span>
-              </Button>
-            ))}
+            {Array.isArray(currentProblem?.choices) &&
+              currentProblem.choices.map((item, index) => (
+                <Button
+                  variant="tertiary"
+                  size="large"
+                  key={index}
+                  isSelected={
+                    idx === "ai"
+                      ? selectedChoiceId === index
+                      : selectedChoiceId === item.id
+                  }
+                  onClick={() =>
+                    setSelectedChoiceId(idx === "ai" ? index : item.id)
+                  }
+                >
+                  <span style={{ width: "100%" }}>
+                    {idx === "ai" ? item : item.content}
+                  </span>
+                </Button>
+              ))}
           </Problem>
           <Buttons>
             <Button

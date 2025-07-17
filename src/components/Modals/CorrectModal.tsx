@@ -42,8 +42,9 @@ export const CorrectModal = ({
 
     setSolveCount(newCount);
 
-    if (newCount >= 5) {
-      navigate("/result", {
+    if (idx !== "ai" && newCount >= 3) {
+      // 기존 로직 유지
+      navigate(`/result/${param}`, {
         state: {
           chapterComplete: {
             total_xp: Number(totalXp || 0) + Number(getXP || 0),
@@ -58,13 +59,21 @@ export const CorrectModal = ({
         },
       });
       reset();
-      setSolveCount(0); // ✅ 이거 넣어줘야 다음 챕터 때도 작동함
+      setSolveCount(0);
     } else {
-      while (`/${randomUrl}/${idx}/${param}` === currentPath) {
+      while (
+        (idx === "ai"
+          ? `/${randomUrl}/${idx}`
+          : `/${randomUrl}/${idx}/${param}`) === currentPath
+      ) {
         randomUrl = problems[Math.floor(Math.random() * problems.length)];
       }
 
-      navigate(`/${randomUrl}/${idx}/${param}`);
+      if (idx === "ai") {
+        navigate(`/${randomUrl}/${idx}`);
+      } else {
+        navigate(`/${randomUrl}/${idx}/${param}`);
+      }
     }
 
     onClose();

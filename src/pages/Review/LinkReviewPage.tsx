@@ -69,11 +69,11 @@ export const LinkReviewPage = () => {
 
   const reviewInfo = [
     {
-      name: "새로 생성된 복습",
+      name: summary ? "새로 생성된 복습" : "로딩중...",
       value: summary?.new_review_count,
     },
     {
-      name: "진행 중인 복습",
+      name: summary ? "진행 중인 복습" : "로딩중...",
       value: summary?.ongoing_review_count,
     },
   ];

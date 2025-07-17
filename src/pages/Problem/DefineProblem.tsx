@@ -27,16 +27,30 @@ export const DefineProblem = () => {
   let randomUrl = problems[Math.floor(Math.random() * problems.length)];
   const currentPath = window.location.pathname;
   const handleClick = () => {
-    while (`/${randomUrl}/${idx}/${param}` === currentPath) {
+    while (
+      (idx === "ai"
+        ? `/${randomUrl}/${idx}`
+        : `/${randomUrl}/${idx}/${param}`) === currentPath
+    ) {
       randomUrl = problems[Math.floor(Math.random() * problems.length)];
     }
 
-    navigate(`/${randomUrl}/${idx}/${param}`);
+    if (idx === "ai") {
+      navigate(`/${randomUrl}/${idx}`);
+    } else {
+      navigate(`/${randomUrl}/${idx}/${param}`);
+    }
   };
 
   const roadmapId = params.indexOf(param) + 1;
+
+  const shouldFetchChapters = idx !== "ai";
+
   const { data: chapterProblems, isLoading: isDetailRoadmapLoading } =
-    useRoadmapChaptersProblems(1, roadmapId);
+    useRoadmapChaptersProblems(
+      shouldFetchChapters ? 1 : undefined,
+      shouldFetchChapters ? roadmapId : undefined
+    );
 
   const { data: aiRoadDetail, isLoading: isAiProblemLoading } =
     useGetAiProblem();
@@ -57,7 +71,7 @@ export const DefineProblem = () => {
     if (idx === "ai") {
       if (aiRoadDetail && !currentProblem) {
         problemsToConsider = aiRoadDetail?.content || []; // ✅ 이렇게 고쳐야 해
-        targetProblemType = "FILL_BLANK";
+        targetProblemType = "ANSWER";
       }
     } else {
       if (chapterProblems && !currentProblem) {
