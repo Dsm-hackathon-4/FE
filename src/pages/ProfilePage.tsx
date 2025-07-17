@@ -35,8 +35,8 @@ export const ProfilePage = () => {
       title: "현재 등수",
       icon: Rank,
       color: theme.color.rank,
-      value: `#${data?.statistics?.weekly_rank}`,
-      info: "상위 15%",
+      value: `#${data?.statistics?.daily_rank}`,
+      info: "",
       infoColor: "#2563EB",
     },
     {

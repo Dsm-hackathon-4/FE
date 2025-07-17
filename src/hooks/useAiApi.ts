@@ -29,11 +29,11 @@ export const useGetAiSummary = () => {
 export const useSolveAiProblem = () => {
   return useMutation({
     mutationFn: ({
-      problemId,
+      problem_id,
       answer,
     }: {
-      problemId: number;
+      problem_id: number;
       answer: string;
-    }) => solveAiProblem(problemId, answer),
+    }) => solveAiProblem(problem_id, answer),
   });
 };

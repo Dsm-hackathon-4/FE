@@ -7,24 +7,31 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSolveProblem } from "@/hooks/useProblemApi";
 import {
-  useRoadmap,
-  useDetailRoadmap,
+  useRoadmapChaptersProblems,
   useGetAiProblem,
   useSolveAiProblem,
 } from "@/hooks";
+import { useSolve } from "@/contexts/SolveContext";
 
 export const SelectProblem = () => {
-  const { idx } = useParams();
+  const { solveCount, setSolveCount } = useSolve();
+
+  const { idx, param } = useParams();
   const problems = ["blankProblem", "defineProblem", "selectProblem"];
   const navigate = useNavigate();
+  let randomUrl = problems[Math.floor(Math.random() * problems.length)];
+  const currentPath = window.location.pathname;
   const handleClick = () => {
-    const randomUrl = problems[Math.floor(Math.random() * problems.length)];
-    navigate(`/${randomUrl}/${idx}`);
-  };
+    while (`/${randomUrl}/${idx}/${param}` === currentPath) {
+      randomUrl = problems[Math.floor(Math.random() * problems.length)];
+    }
 
+    navigate(`/${randomUrl}/${idx}/${param}`);
+  };
+  const params = ["db", "sql", "table", "index"];
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null); // 선택된 버튼의 ID 저장
-  const [currentProblem, setCurrentProblem] = useState<any>(null); // currentProblem을 useState로 관리
+  const [currentProblem, setCurrentProblem] = useState(null); // currentProblem을 useState로 관리
   const { mutate, data: solveData } = useSolveProblem();
   const { mutate: solveAiProblem, data: solveAiData } = useSolveAiProblem();
   useEffect(() => {
@@ -35,42 +42,39 @@ export const SelectProblem = () => {
     }
   }, [solveData, navigate]);
 
-  const { data, isLoading: isRoadmapLoading } = useRoadmap();
-  const roadmapId = data?.[0]?.id;
-  const { data: RoadDetail, isLoading: isDetailRoadmapLoading } =
-    useDetailRoadmap(roadmapId);
+  const roadmapId = params.indexOf(param) + 1;
+  const { data: chapterProblems, isLoading: isDetailRoadmapLoading } =
+    useRoadmapChaptersProblems(1, roadmapId);
+  console.log(chapterProblems);
 
   const { data: aiRoadDetail, isLoading: isAiProblemLoading } =
     useGetAiProblem();
 
   useEffect(() => {
-    let problemsSource: any[] | undefined;
+    let problemsToConsider: any[] = [];
     let targetProblemType: string = "";
 
     if (idx === "ai") {
       if (aiRoadDetail && !currentProblem) {
-        problemsSource = aiRoadDetail.content;
-        targetProblemType = "CHOICE";
+        problemsToConsider = aiRoadDetail?.content || []; // ✅ 이렇게 고쳐야 해
+        targetProblemType = "FILL_BLANK";
       }
     } else {
-      if (RoadDetail && !currentProblem) {
-        problemsSource =
-          Number(idx) === 0
-            ? RoadDetail.problems?.easy
-            : Number(idx) === 1
-            ? RoadDetail.problems?.medium
-            : RoadDetail.problems?.hard;
+      if (chapterProblems && !currentProblem) {
+        const level = ["EASY", "MEDIUM", "HARD"][Number(idx)];
+        problemsToConsider =
+          chapterProblems.filter((p) => p.difficulty === level) || [];
         targetProblemType = "WORD_CHOICE";
       }
     }
+    console.log(problemsToConsider);
 
-    if (problemsSource && !currentProblem) {
-      const filteredProblems = (problemsSource || []).filter((p: any) =>
+    if (problemsToConsider.length > 0 && !currentProblem) {
+      const filteredProblems = problemsToConsider.filter((p) =>
         idx === "ai"
-          ? p.problem_type === targetProblemType
+          ? p.problem_type?.toUpperCase() === targetProblemType
           : p.type === targetProblemType
       );
-
       if (filteredProblems.length > 0) {
         const randomIndex = Math.floor(Math.random() * filteredProblems.length);
         const newProblem = filteredProblems[randomIndex];
@@ -78,18 +82,13 @@ export const SelectProblem = () => {
         return;
       }
 
+      // If no problems of the current type, try other types
       const availableProblemTypes = [];
-      if (
-        (problemsSource || []).some(
-          (p: any) => p.problemType === "BLANK_CHOICE"
-        )
-      ) {
-        availableProblemTypes.push("blankProblem");
-      }
-      if (
-        (problemsSource || []).some((p: any) => p.problemType === "SUBJECTIVE")
-      ) {
+      if (problemsToConsider.some((p) => p.problemType === "SUBJECTIVE")) {
         availableProblemTypes.push("defineProblem");
+      }
+      if (problemsToConsider.some((p) => p.problemType === "WORD_CHOICE")) {
+        availableProblemTypes.push("selectProblem");
       }
 
       if (availableProblemTypes.length > 0) {
@@ -99,17 +98,15 @@ export const SelectProblem = () => {
           ];
         navigate(`/${randomType}/${idx}`);
       } else {
-        setCurrentProblem(null);
+        setCurrentProblem(null); // No more problems of any type
       }
     }
-  }, [RoadDetail, aiRoadDetail, currentProblem, idx, navigate]);
-
-  console.log(aiRoadDetail);
+  }, [chapterProblems, aiRoadDetail, currentProblem, idx, navigate]);
 
   const onSubmit = () => {
     if (idx === "ai") {
       solveAiProblem({
-        problemId: currentProblem?.id,
+        problem_id: currentProblem?.id,
         answer: String(selectedChoiceId),
       });
     } else {
@@ -123,8 +120,7 @@ export const SelectProblem = () => {
   // ✅ 로딩 중일 때 early return으로 분기
   if (
     (idx === "ai" && isAiProblemLoading) ||
-    (idx !== "ai" &&
-      (isRoadmapLoading || isDetailRoadmapLoading || !RoadDetail || !idx))
+    (idx !== "ai" && (isDetailRoadmapLoading || !chapterProblems || !idx))
   ) {
     return (
       <div
@@ -163,20 +159,21 @@ export const SelectProblem = () => {
                   setSelectedChoiceId(idx === "ai" ? index : item.id)
                 }
               >
-                {idx === "ai" ? item : item.content}
+                <span style={{ width: "100%" }}>
+                  {idx === "ai" ? item : item.content}
+                </span>
               </Button>
             ))}
           </Problem>
           <Buttons>
-            {idx === "ai" && (
-              <Button
-                size="small"
-                variant="secondary"
-                onClick={() => navigate("/")}
-              >
-                나가기
-              </Button>
-            )}
+            <Button
+              size="small"
+              variant="secondary"
+              onClick={() => navigate("/")}
+            >
+              나가기
+            </Button>
+
             <Button size="small" variant="secondary" onClick={handleClick}>
               건너뛰기
             </Button>
@@ -186,11 +183,15 @@ export const SelectProblem = () => {
           </Buttons>
         </Contents>
         <CorrectModal
+          param={param}
+          solveCount={solveCount}
+          setSolveCount={setSolveCount}
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           type={
             idx === "ai"
-              ? solveAiData?.is_correct
+              ? solveAiData?.correct_answer ===
+                currentProblem?.choices?.[selectedChoiceId]
                 ? "correct"
                 : "wrong"
               : solveData?.is_correct

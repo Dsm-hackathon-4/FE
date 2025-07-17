@@ -7,6 +7,7 @@ import {
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const getCookie = (name: string): string | null => {
   const nameEQ = name + "=";
@@ -43,6 +44,7 @@ const getUserIdFromAccessToken = (accessToken: string): string | null => {
 };
 
 export const LinkReviewPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const accessToken = getCookie("accessToken"); // 쿠키에서 accessToken 가져오기
   const userId = accessToken ? getUserIdFromAccessToken(accessToken) : null;
   const problems = ["blankProblem", "defineProblem", "selectProblem"];
@@ -51,8 +53,19 @@ export const LinkReviewPage = () => {
     const randomUrl = problems[Math.floor(Math.random() * problems.length)];
     navigate(`/${randomUrl}/ai`);
   };
+  const handleRefresh = () => {
+    if (!userId) return;
+    setIsLoading(true);
+
+    mutate(userId, {
+      onSettled: async () => {
+        await refetchSummary(); // summary 다시 불러오기
+        setIsLoading(false); // 로딩 끝!
+      },
+    });
+  };
   const { mutate } = useAiProblem();
-  const { data: summary } = useGetAiSummary();
+  const { data: summary, refetch: refetchSummary } = useGetAiSummary();
 
   const reviewInfo = [
     {
@@ -88,8 +101,12 @@ export const LinkReviewPage = () => {
       <Review>
         <ReviewTitle>
           <span style={theme.font.h3}>오늘의 복습</span>
-          <Refresh onClick={() => mutate(userId)}>
-            <span style={theme.font.t2}>새로고침</span>
+          <Refresh onClick={handleRefresh}>
+            {isLoading ? (
+              <span style={{ ...theme.font.t2 }}>로딩중...</span>
+            ) : (
+              <span style={{ ...theme.font.t2 }}>새로고침</span>
+            )}
           </Refresh>
         </ReviewTitle>
         <ReviewContents>

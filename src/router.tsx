@@ -20,6 +20,10 @@ import { HeaderLayout, SideBarLayout } from "@/components/layouts";
 
 const router = createBrowserRouter([
   {
+    path: "/result",
+    element: <ResultPage />,
+  },
+  {
     element: <HeaderLayout />,
     children: [
       {
@@ -43,15 +47,15 @@ const router = createBrowserRouter([
         element: <SelectStudyTypePage />,
       },
       {
-        path: "blankProblem/:idx",
+        path: "blankProblem/:idx/:param",
         element: <BlankProblem />,
       },
       {
-        path: "defineProblem/:idx",
+        path: "defineProblem/:idx/:param",
         element: <DefineProblem />,
       },
       {
-        path: "selectProblem/:idx",
+        path: "selectProblem/:idx/:param",
         element: <SelectProblem />,
       },
     ],
@@ -80,10 +84,6 @@ const router = createBrowserRouter([
         element: <LinkReviewPage />,
       },
     ],
-  },
-  {
-    path: "result",
-    element: <ResultPage />,
   },
   {
     path: "/oauth/success",

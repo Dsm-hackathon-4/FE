@@ -14,24 +14,91 @@ import {
 import toast from "react-hot-toast";
 
 export const HomePage = () => {
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [selectedChapterId, setSelectedChapterId] = useState<number | null>(
+    null
+  );
+  const [selectedChapterTitle, setSelectedChapterTitle] = useState<
+    string | null
+  >(null);
+  const [dots, setDots] = useState<(boolean | "reward")[]>([]);
+  const [openedChests, setOpenedChests] = useState<Set<number>>(new Set());
+
   const location = useLocation();
   const navigate = useNavigate();
-  const [dots, setDots] = useState(() => {
-    const saved = localStorage.getItem("dots");
-    return saved ? JSON.parse(saved) : [false, false, false, "reward"];
-  });
-
-  // Use a ref to track if the update has already been processed for the current location.key
   const processedLocationKey = useRef<string | null>(null);
 
+  const { data, isLoading } = useRoadmap();
+  const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
+  const { data: Chapters } = useRoadmapChapters(RoadDetail?.roadmap.id);
   useEffect(() => {
-    localStorage.setItem("dots", JSON.stringify(dots));
-  }, [dots]);
+    if (Chapters && Chapters.length > 0 && selectedChapterId === null) {
+      setSelectedChapterId(Chapters[0].id);
+      setSelectedChapterTitle(Chapters[0].title);
+    }
+  }, [Chapters, selectedChapterId]);
+
+  useEffect(() => {
+    if (selectedChapterId === null) return;
+
+    const key = `dots_${selectedChapterId}`;
+    const saved = localStorage.getItem(key);
+
+    try {
+      const parsed = saved ? JSON.parse(saved) : null;
+      const isValidDots =
+        Array.isArray(parsed) &&
+        parsed.length === 4 &&
+        parsed.every((item) => typeof item === "boolean" || item === "reward");
+
+      if (isValidDots) {
+        setDots(parsed);
+      } else {
+        throw new Error("invalid dots");
+      }
+    } catch {
+      const defaultDots: (boolean | "reward")[] = [
+        false,
+        false,
+        false,
+        "reward",
+      ];
+      setDots(defaultDots);
+      localStorage.setItem(key, JSON.stringify(defaultDots));
+    }
+
+    // openedChests 로직도 같이
+    const openedKey = `openedChests_${selectedChapterId}`;
+    const savedOpened = localStorage.getItem(openedKey);
+
+    try {
+      const parsedOpened = savedOpened ? JSON.parse(savedOpened) : [];
+      if (Array.isArray(parsedOpened)) {
+        setOpenedChests(new Set(parsedOpened));
+      } else throw new Error("invalid chest");
+    } catch {
+      setOpenedChests(new Set());
+    }
+  }, [selectedChapterId]);
+
+  useEffect(() => {
+    if (selectedChapterId === null) return;
+    localStorage.setItem(`dots_${selectedChapterId}`, JSON.stringify(dots));
+  }, [dots, selectedChapterId]);
+
+  useEffect(() => {
+    if (selectedChapterId === null) return;
+    localStorage.setItem(
+      `openedChests_${selectedChapterId}`,
+      JSON.stringify(Array.from(openedChests))
+    );
+  }, [openedChests, selectedChapterId]);
 
   useEffect(() => {
     if (
       location.state?.chapterCompleted &&
-      location.key !== processedLocationKey.current
+      location.key !== processedLocationKey.current &&
+      selectedChapterId !== null
     ) {
       setDots((prevDots) => {
         const newDots = [...prevDots];
@@ -41,27 +108,11 @@ export const HomePage = () => {
         }
         return newDots;
       });
-      processedLocationKey.current = location.key; // Mark this location.key as processed
+      processedLocationKey.current = location.key;
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, location.key, navigate]);
-  const [openedChests, setOpenedChests] = useState<Set<number>>(() => {
-    const savedChests = localStorage.getItem("openedChests");
-    return savedChests ? new Set(JSON.parse(savedChests)) : new Set();
-  });
+  }, [location.state, location.key, navigate, selectedChapterId]);
 
-  useEffect(() => {
-    localStorage.setItem(
-      "openedChests",
-      JSON.stringify(Array.from(openedChests))
-    );
-  }, [openedChests]);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const { data, isLoading } = useRoadmap();
-  const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
-  const { data: Chapters } = useRoadmapChapters(RoadDetail?.roadmap.id);
-
-  console.log(Chapters);
   if (isLoading)
     return (
       <div
@@ -93,11 +144,13 @@ export const HomePage = () => {
     "right",
   ];
 
+  const params = ["db", "sql", "table", "index"];
+
   const repeatPattern = (pattern: string[], count: number): string[] => {
     return Array.from({ length: count }).flatMap(() => pattern);
   };
 
-  const repeatDots = repeatPattern(pattern, dots.length);
+  const repeatDots = repeatPattern(pattern, dots.length || 4);
 
   const getOffsets = (pattern: string[]) => {
     let pos = 0;
@@ -110,6 +163,7 @@ export const HomePage = () => {
   };
 
   const offsets = getOffsets(repeatDots);
+
   return (
     <Wrapper>
       <Contents>
@@ -119,13 +173,13 @@ export const HomePage = () => {
               {RoadDetail?.roadmap.category_name}
             </span>
             <span style={{ ...theme.font.t1, color: theme.color.white }}>
-              {Chapters?.[0].title}
+              {selectedChapterTitle || Chapters?.[0].title}
             </span>
           </Title>
           <Dots>
             {dots.map((done, idx) => {
               const isShowBaloon =
-                (idx === 0 && dots[0] === false) || // 첫 번째일 때 무조건 false면 보여줘
+                (idx === 0 && dots[0] === false) ||
                 (dots[idx] === false &&
                   (dots[idx - 1] === true || dots[idx - 1] === "reward") &&
                   dots[idx - 2] !== false);
@@ -136,20 +190,14 @@ export const HomePage = () => {
                   alt=""
                   offset={offsets[idx]}
                   onClick={() => {
-                    // 이미 열린 상자이면 아무것도 하지 않음
-                    if (openedChests.has(idx)) {
-                      return;
-                    }
-
-                    // 이전 dot이 유효하고 false이면 열 수 없음
+                    if (openedChests.has(idx)) return;
                     if (idx > 0 && dots[idx - 1] === false) {
                       toast.error(
                         "이전 단계를 완료해야 상자를 열 수 있습니다."
                       );
                       return;
                     }
-
-                    setOpenedChests((prev) => new Set(prev.add(idx)));
+                    setOpenedChests((prev) => new Set(prev).add(idx));
                     setShowConfetti(true);
                     setTimeout(() => setShowConfetti(false), 3000);
                   }}
@@ -159,10 +207,11 @@ export const HomePage = () => {
                   <StudyCheck done={done as boolean} offset={offsets[idx]} />
                   {isShowBaloon && (
                     <Baloon
-                      children={RoadDetail?.roadmap.title}
+                      children={selectedChapterTitle}
                       children2="열심히 공부해서 실력을 향상시키세요."
                       offset={offsets[idx]}
                       idx={idx}
+                      param={params[selectedChapterId - 1]}
                     />
                   )}
                 </DotWrapper>
@@ -173,19 +222,9 @@ export const HomePage = () => {
         <StyledIconSmaller
           src={IconSmaller}
           alt=""
-          style={{
-            left: "50%",
-            top: "50%",
-          }}
+          style={{ left: "50%", top: "50%" }}
         />
-        <StyledCat
-          src={Cat}
-          alt=""
-          style={{
-            left: "20%",
-            top: "20%",
-          }}
-        />
+        <StyledCat src={Cat} alt="" style={{ left: "20%", top: "20%" }} />
       </Contents>
       <RoadMap>
         <span style={{ ...theme.font.h4 }}>
@@ -200,9 +239,17 @@ export const HomePage = () => {
             width="400px"
             children={chapter.title}
             children2={
-              chapter.is_completed ? <img src={Check} alt="" /> : <CheckDiv />
+              selectedChapterId === chapter.id ? (
+                <img src={Check} alt="" />
+              ) : (
+                <CheckDiv />
+              )
             }
-            active={chapter.is_completed}
+            active={selectedChapterId === chapter.id}
+            onClick={() => {
+              setSelectedChapterTitle(chapter.title);
+              setSelectedChapterId(chapter.id);
+            }}
           />
         ))}
       </RoadMap>
@@ -278,8 +325,8 @@ const StyledRewardChest = styled.img<{ offset: number }>`
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   transform: ${(props) => `translateX(${props.offset * 80}px)`};
-  width: 100px; /* Fixed width */
-  height: 100px; /* Fixed height */
+  width: 100px;
+  height: 100px;
   &:hover {
     transform: ${(props) => `translateX(${props.offset * 80}px) scale(1.05)`};
   }
@@ -302,7 +349,7 @@ const StyledCat = styled.img`
   width: 217px;
   height: 217px;
   position: absolute;
-  animation: ${floating} 4s ease-in-out infinite; /* Different duration for variety */
+  animation: ${floating} 4s ease-in-out infinite;
 `;
 
 const confettiFall = keyframes`
@@ -326,7 +373,7 @@ const ConfettiPiece = styled.div<{
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;
   background-color: ${(props) => props.color};
-  border-radius: 50%; /* Make some circles */
+  border-radius: 50%;
   opacity: 0;
   animation: ${confettiFall} ${(props) => props.duration}s ease-out forwards;
   animation-delay: ${(props) => props.delay}s;
@@ -353,15 +400,15 @@ const Confetti = () => {
     theme.color.yellow[500],
     theme.color.orange[500],
   ];
-  const numPieces = 80; // Increased from 30
+  const numPieces = 80;
 
   return (
     <ConfettiContainer>
       {Array.from({ length: numPieces }).map((_, i) => {
         const color = colors[Math.floor(Math.random() * colors.length)];
-        const size = Math.random() * 10 + 6; // Increased size range
-        const delay = Math.random() * 0.8; // Slightly longer delay range
-        const duration = Math.random() * 3 + 3; // Longer duration for more visible fall
+        const size = Math.random() * 10 + 6;
+        const delay = Math.random() * 0.8;
+        const duration = Math.random() * 3 + 3;
         return (
           <ConfettiPiece
             key={i}

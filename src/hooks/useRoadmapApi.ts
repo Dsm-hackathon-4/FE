@@ -3,6 +3,7 @@ import {
   getDetailRoadmap,
   getRoadmapChapters,
   getRoadmaps,
+  getRoadmapChaptersProblems,
 } from "@/apis/roadmaps";
 
 export const useRoadmap = () => {
@@ -32,5 +33,23 @@ export const useRoadmapChapters = (id: number | undefined) => {
       return getRoadmapChapters(id);
     },
     enabled: id !== undefined,
+  });
+};
+
+export const useRoadmapChaptersProblems = (
+  roadmapId: number | undefined,
+  chapterId: number | undefined
+) => {
+  return useQuery({
+    queryKey: ["getRoadmapChaptersProblems", roadmapId, chapterId],
+    queryFn: () => {
+      if (roadmapId === undefined || chapterId === undefined) {
+        throw new Error(
+          "Roadmap ID and Chapter ID are required for detail roadmap query."
+        );
+      }
+      return getRoadmapChaptersProblems(roadmapId, chapterId);
+    },
+    enabled: roadmapId !== undefined && chapterId !== undefined,
   });
 };

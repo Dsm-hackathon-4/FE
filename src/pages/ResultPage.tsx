@@ -3,22 +3,11 @@ import styled from "@emotion/styled";
 import { Correct, ResultIcon, Star, ResultCheck } from "@/assets";
 import { Button } from "@/components";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 export const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { chapterComplete } = location.state || {};
-
-  useEffect(() => {
-    if (!chapterComplete) {
-      navigate("/");
-    }
-  }, [chapterComplete, navigate]);
-
-  if (!chapterComplete) {
-    return null; // Or a loading indicator
-  }
 
   console.log(chapterComplete);
   return (

@@ -8,6 +8,23 @@ export interface GetRoadmapsType {
   bg_color: string;
 }
 
+export interface GetRoadmapChaptersProblemType {
+  id: number;
+  type: "BLANK_CHOICE" | "SELECT" | "DEFINE" | string; // 다른 타입 있을 수 있으니 string 포함
+  title: string;
+  content: string;
+  hint: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD" | string;
+  xp_reward: number;
+  image_url: string | null;
+  choices: string[]; // 선택지 문제용
+  category: {
+    id: number;
+    name: string;
+    description: string;
+    icon_url: string;
+  };
+}
 export interface GetDetailRoadmapType {
   roadmap: {
     id: number;

@@ -19,13 +19,13 @@ export const SelectStudyTypePage = () => {
             </Contents>
             <span style={{ ...theme.font.h1 }}>☝️</span>
           </Select>
-          <Select color={theme.color.primary2}>
+          {/* <Select color={theme.color.primary2}>
             <Contents onClick={() => navigate("/")}>
               <span style={{ ...theme.font.t1 }}>내 레벨 찾기</span>
               <span>학습 시작 지점을 추천해드려요!</span>
             </Contents>
             <span style={{ ...theme.font.h1 }}>🧭</span>
-          </Select>
+          </Select> */}
         </SelectDiv>
       </Container>
     </Wrapper>

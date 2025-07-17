@@ -3,6 +3,7 @@ import { theme } from "@/themes";
 import { CorrectCheck, Fail } from "@/assets";
 import { Button } from "../Button";
 import { useNavigate } from "react-router-dom";
+import { useSolveStats } from "@/contexts/SolveStatsContext";
 
 interface CorrectModalProps {
   isOpen: boolean;
@@ -12,6 +13,9 @@ interface CorrectModalProps {
   correctAnswer: string;
   getXP: number;
   idx: string;
+  solveCount: number;
+  setSolveCount: React.Dispatch<React.SetStateAction<number>>;
+  param: string;
 }
 
 export const CorrectModal = ({
@@ -22,14 +26,47 @@ export const CorrectModal = ({
   correctAnswer,
   getXP,
   idx,
+  solveCount,
+  setSolveCount,
+  param,
 }: CorrectModalProps) => {
   const navigate = useNavigate();
   if (!isOpen) return null;
   const problems = ["blankProblem", "defineProblem", "selectProblem"];
-
+  let randomUrl = problems[Math.floor(Math.random() * problems.length)];
+  const currentPath = window.location.pathname;
+  const { addResult, correctCount, totalXp, reset } = useSolveStats();
   const handleClick = () => {
-    const randomUrl = problems[Math.floor(Math.random() * problems.length)];
-    navigate(`/${randomUrl}/${idx}`);
+    const newCount = solveCount + 1;
+    addResult(type === "correct", Number(getXP));
+
+    setSolveCount(newCount);
+
+    if (newCount >= 5) {
+      navigate("/result", {
+        state: {
+          chapterComplete: {
+            total_xp: Number(totalXp || 0) + Number(getXP || 0),
+            correct_count: type === "correct" ? correctCount + 1 : correctCount,
+            total_count: newCount,
+            accuracy_rate: Math.round(
+              ((type === "correct" ? correctCount + 1 : correctCount) /
+                newCount) *
+                100
+            ),
+          },
+        },
+      });
+      reset();
+      setSolveCount(0); // ✅ 이거 넣어줘야 다음 챕터 때도 작동함
+    } else {
+      while (`/${randomUrl}/${idx}/${param}` === currentPath) {
+        randomUrl = problems[Math.floor(Math.random() * problems.length)];
+      }
+
+      navigate(`/${randomUrl}/${idx}/${param}`);
+    }
+
     onClose();
   };
 

@@ -7,16 +7,23 @@ interface BaloonProps {
   children2: React.ReactNode;
   offset?: number;
   idx: number;
+  param: string;
 }
 
-export const Baloon = ({ children, children2, offset, idx }: BaloonProps) => {
+export const Baloon = ({
+  children,
+  children2,
+  offset,
+  idx,
+  param,
+}: BaloonProps) => {
   const navigate = useNavigate();
   const problems = ["blankProblem", "defineProblem", "selectProblem"];
 
   const handleClick = () => {
     const randomUrl = problems[Math.floor(Math.random() * problems.length)];
     console.log("practice +5 XP");
-    navigate(`/${randomUrl}/${idx}`);
+    navigate(`/${randomUrl}/${idx}/${param}`);
   };
   return (
     <BaloonWrapper offset={offset}>
