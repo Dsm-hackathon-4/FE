@@ -37,6 +37,9 @@ export interface Chapter {
   icon_url: string;
 }
 
+export interface GetChapterProblemsType {
+  problems: ProblemType[];
+}
 export type GetRoadmapChaptersType = Chapter[];
 
 interface ProblemType {

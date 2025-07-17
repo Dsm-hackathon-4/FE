@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // 백엔드 API 기본 URL
-  timeout: 10000,
+  timeout: 500000,
   headers: {
     "Content-Type": "application/json",
   },

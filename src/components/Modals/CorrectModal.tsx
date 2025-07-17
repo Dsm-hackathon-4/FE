@@ -56,7 +56,7 @@ export const CorrectModal = ({
               alt="correctCheck"
               style={{ position: "absolute", top: "-15px", left: "-15px" }}
             />
-            <span style={theme.font.h4}>답 : {correctAnswer}</span>
+            <span style={{ ...theme.font.h4 }}>답 : {correctAnswer}</span>
           </Answer>
           <Footer>
             <span style={{ ...theme.font.t1, color: theme.color.modalXp }}>
@@ -89,8 +89,11 @@ const Answer = styled.div<{ type: "correct" | "wrong" }>`
   border: 3px solid
     ${(props) =>
       props.type === "correct" ? theme.color.green[700] : theme.color.red[700]};
-  width: 332px;
-  height: 63px;
+  min-width: 332px;
+  min-height: 63px;
+  width: auto;
+  height: auto;
+  padding: 10px 20px; /* Add some padding to allow text to breathe */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,6 +101,8 @@ const Answer = styled.div<{ type: "correct" | "wrong" }>`
   color: ${(props) =>
     props.type === "correct" ? theme.color.green[800] : theme.color.red[800]};
   position: relative;
+  word-break: break-word; /* Break long words */
+  text-align: center; /* Center text if it wraps */
 `;
 
 const Wrapper = styled.div`

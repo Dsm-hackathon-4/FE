@@ -1,16 +1,67 @@
 import { Github, Notion, RightArrow } from "@/assets";
+import {
+  useAiProblem,
+  useGetAiProblem,
+  useGetAiSummary,
+} from "@/hooks/useAiApi";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
+
+const getCookie = (name: string): string | null => {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+
+const getUserIdFromAccessToken = (accessToken: string): string | null => {
+  try {
+    const parts = accessToken.split(".");
+    if (parts.length !== 3) {
+      console.error("Invalid JWT format");
+      return null;
+    }
+    const payload = parts[1];
+    const decodedPayload = atob(payload);
+    const payloadObj = JSON.parse(decodedPayload);
+    return (
+      payloadObj.id ||
+      payloadObj.user_id ||
+      payloadObj.userId ||
+      payloadObj.sub ||
+      null
+    ); // 'id', 'user_id', 'userId', 'sub' 등 실제 키에 따라 변경
+  } catch (error) {
+    console.error("Failed to decode or parse access token:", error);
+    return null;
+  }
+};
 
 export const LinkReviewPage = () => {
+  const accessToken = getCookie("accessToken"); // 쿠키에서 accessToken 가져오기
+  const userId = accessToken ? getUserIdFromAccessToken(accessToken) : null;
+  const problems = ["blankProblem", "defineProblem", "selectProblem"];
+  const navigate = useNavigate();
+  const handleClick = () => {
+    const randomUrl = problems[Math.floor(Math.random() * problems.length)];
+    navigate(`/${randomUrl}/ai`);
+  };
+  const { mutate } = useAiProblem();
+  const { data: summary } = useGetAiSummary();
+
   const reviewInfo = [
     {
       name: "새로 생성된 복습",
-      value: 4,
+      value: summary?.new_review_count,
     },
     {
       name: "진행 중인 복습",
-      value: 7,
+      value: summary?.ongoing_review_count,
     },
   ];
   const linkInfo = [
@@ -18,11 +69,12 @@ export const LinkReviewPage = () => {
       name: "Github",
       icon: Github,
       color: theme.color.github,
+      href: `https://integrations-223.loca.lt/integrations/github/${userId}`,
     },
-
     {
       name: "Notion",
       icon: Notion,
+      href: `https://integrations-223.loca.lt/integrations/notion/${userId}`,
     },
   ];
   return (
@@ -36,12 +88,12 @@ export const LinkReviewPage = () => {
       <Review>
         <ReviewTitle>
           <span style={theme.font.h3}>오늘의 복습</span>
-          <Refresh>
+          <Refresh onClick={() => mutate(userId)}>
             <span style={theme.font.t2}>새로고침</span>
           </Refresh>
         </ReviewTitle>
         <ReviewContents>
-          <ReviewStart>
+          <ReviewStart onClick={handleClick}>
             <span style={{ ...theme.font.h4, color: theme.color.white }}>
               복습 시작
             </span>
@@ -59,11 +111,15 @@ export const LinkReviewPage = () => {
         <ReviewLink>
           <div>
             <span style={theme.font.h3}>연동</span>
-            <img src={RightArrow} alt="" />
           </div>
           <LinkContents>
             {linkInfo.map((info, idx) => (
-              <LinkContent key={idx} color={info.color} name={info.name}>
+              <LinkContent
+                key={idx}
+                color={info.color}
+                name={info.name}
+                onClick={() => window.open(info.href, "_blank")}
+              >
                 <img src={info.icon} alt="" />
                 <div>
                   <span
@@ -176,8 +232,13 @@ const Refresh = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
   &:hover {
-    opacity: 0.8;
+    background-color: ${theme.color.green[200]};
+    transform: translateY(-2px);
+  }
+  &:active {
+    transform: translateY(0);
   }
 `;
 

@@ -5,7 +5,7 @@ import { SelectBtn, StudyCheck } from "@/components";
 import { Cat, Check, IconSmaller, RewardChest, OpenChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   useDetailRoadmap,
   useRoadmap,
@@ -18,16 +18,21 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [dots, setDots] = useState(() => {
     const saved = localStorage.getItem("dots");
-    if (saved) return JSON.parse(saved);
-    return [false, false, false, "reward"];
+    return saved ? JSON.parse(saved) : [false, false, false, "reward"];
   });
+
+  // Use a ref to track if the update has already been processed for the current location.key
+  const processedLocationKey = useRef<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem("dots", JSON.stringify(dots));
   }, [dots]);
 
   useEffect(() => {
-    if (location.state?.chapterCompleted) {
+    if (
+      location.state?.chapterCompleted &&
+      location.key !== processedLocationKey.current
+    ) {
       setDots((prevDots) => {
         const newDots = [...prevDots];
         const firstFalseIdx = newDots.findIndex((dot) => dot === false);
@@ -36,10 +41,10 @@ export const HomePage = () => {
         }
         return newDots;
       });
-      // state 초기화 안 하면 useEffect가 계속 실행됨
+      processedLocationKey.current = location.key; // Mark this location.key as processed
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, navigate]);
+  }, [location.state, location.key, navigate]);
   const [openedChests, setOpenedChests] = useState<Set<number>>(() => {
     const savedChests = localStorage.getItem("openedChests");
     return savedChests ? new Set(JSON.parse(savedChests)) : new Set();

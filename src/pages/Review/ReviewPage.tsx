@@ -1,4 +1,4 @@
-import { Mascot, HardIcon, WrongIcon } from "@/assets";
+import { Mascot } from "@/assets";
 import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ export const ReviewPage = () => {
           </TilContents>
           <img src={Mascot} alt="" />
         </Til>
-        <Wrong>
+        {/* <Wrong>
           <WrongContents>
             <span style={{ ...theme.font.h1, color: theme.color.white }}>
               틀린문제
@@ -43,25 +43,25 @@ export const ReviewPage = () => {
             </span>
           </HardContents>
           <img src={HardIcon} alt="" />
-        </Hard>
+        </Hard> */}
       </Contents>
     </Wrapper>
   );
 };
 
-const Hard = styled.div`
-  width: 1012px;
-  height: 196px;
-  border-radius: 20px;
-  background-color: ${theme.color.hard};
-  display: flex;
-  justify-content: space-between;
-  padding: 41px 0px 0px 39px;
+// const Hard = styled.div`
+//   width: 1012px;
+//   height: 196px;
+//   border-radius: 20px;
+//   background-color: ${theme.color.hard};
+//   display: flex;
+//   justify-content: space-between;
+//   padding: 41px 0px 0px 39px;
 
-  > img {
-    align-self: flex-end;
-  }
-`;
+//   > img {
+//     align-self: flex-end;
+//   }
+// `;
 
 const Contents = styled.div`
   display: flex;
@@ -69,19 +69,19 @@ const Contents = styled.div`
   gap: 33px;
 `;
 
-const Wrong = styled.div`
-  width: 1012px;
-  height: 196px;
-  border-radius: 20px;
-  background-color: ${theme.color.wrong};
-  display: flex;
-  justify-content: space-between;
-  padding: 41px 0px 0px 39px;
+// const Wrong = styled.div`
+//   width: 1012px;
+//   height: 196px;
+//   border-radius: 20px;
+//   background-color: ${theme.color.wrong};
+//   display: flex;
+//   justify-content: space-between;
+//   padding: 41px 0px 0px 39px;
 
-  > img {
-    align-self: flex-end;
-  }
-`;
+//   > img {
+//     align-self: flex-end;
+//   }
+// `;
 
 const Title = styled.div`
   display: flex;
@@ -96,7 +96,7 @@ const TilContents = styled.div`
   cursor: pointer;
 `;
 
-const WrongContents = styled(TilContents)``;
+// const WrongContents = styled(TilContents)``;
 const Til = styled.div`
   width: 1012px;
   height: 371px;
@@ -109,7 +109,7 @@ const Til = styled.div`
     align-self: flex-end;
   }
 `;
-const HardContents = styled(TilContents)``;
+// const HardContents = styled(TilContents)``;
 
 const Wrapper = styled.div`
   width: 100%;
