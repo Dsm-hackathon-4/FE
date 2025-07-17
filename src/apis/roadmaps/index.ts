@@ -3,6 +3,7 @@ import {
   GetRoadmapsType,
   GetDetailRoadmapType,
   GetRoadmapChaptersType,
+  GetChapterProblemsType,
 } from "./type";
 
 const router = "/roadmaps";
@@ -22,6 +23,16 @@ export const getDetailRoadmap = async (roadmapId: number) => {
 export const getRoadmapChapters = async (roadmapId: number) => {
   const res = await instance.get<GetRoadmapChaptersType>(
     `${router}/${roadmapId}/chapters`
+  );
+  return res.data;
+};
+
+export const getChapterProblems = async (
+  roadmapId: number,
+  chapterId: number
+) => {
+  const res = await instance.get<GetChapterProblemsType>(
+    `${router}/${roadmapId}/chapters/${chapterId}/problems`
   );
   return res.data;
 };

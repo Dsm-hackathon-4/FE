@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { theme } from "@/themes";
 import { Button, CorrectModal, Input } from "@/components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRoadmap, useDetailRoadmap } from "@/hooks";
 import { useNavigate } from "react-router-dom";
@@ -16,29 +16,71 @@ export const BlankProblem = () => {
   };
   const [modalOpen, setModalOpen] = useState(false);
   const [answer, setAnswer] = useState("");
+  const [currentProblem, setCurrentProblem] = useState<any>(null); // currentProblem을 useState로 관리
   const { mutate, data: solveData } = useSolveProblem();
+
+  useEffect(() => {
+    if (solveData?.chapter_complete) {
+      navigate("/result", {
+        state: { chapterComplete: solveData.chapter_complete },
+      });
+    }
+  }, [solveData, navigate]);
 
   const { idx } = useParams();
 
   const { data, isLoading } = useRoadmap();
-  const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
-  const problem =
-    Number(idx) === 0
-      ? RoadDetail?.problems?.easy
-      : Number(idx) === 1
-      ? RoadDetail?.problems?.medium
-      : RoadDetail?.problems?.hard;
+  const roadmapId = data?.[0]?.id;
+  const { data: RoadDetail, isLoading: isDetailLoading } =
+    useDetailRoadmap(roadmapId);
 
-  const filterProblem = problem?.filter((item) => item.type === "SUBJECTIVE");
+  useEffect(() => {
+    if (RoadDetail && !currentProblem) {
+      const problemsForDifficulty =
+        Number(idx) === 0
+          ? RoadDetail.problems?.easy || []
+          : Number(idx) === 1
+          ? RoadDetail.problems?.medium || []
+          : RoadDetail.problems?.hard || [];
 
-  const [currentProblem] = useState(() => {
-    if (filterProblem && filterProblem.length > 0) {
-      const randomIndex = Math.floor(Math.random() * filterProblem.length);
-      return filterProblem[randomIndex];
+      const blankProblems = problemsForDifficulty.filter(
+        (p) => p.type === "BLANK_CHOICE"
+      );
+
+      if (blankProblems.length > 0) {
+        const randomIndex = Math.floor(Math.random() * blankProblems.length);
+        const newProblem = blankProblems[randomIndex];
+        setCurrentProblem(newProblem);
+        return;
+      }
+
+      const availableProblemTypes = [];
+      if (problemsForDifficulty.some((p) => p.type === "SUBJECTIVE")) {
+        availableProblemTypes.push("defineProblem");
+      }
+      if (problemsForDifficulty.some((p) => p.type === "WORD_CHOICE")) {
+        availableProblemTypes.push("selectProblem");
+      }
+
+      if (availableProblemTypes.length > 0) {
+        const randomType =
+          availableProblemTypes[
+            Math.floor(Math.random() * availableProblemTypes.length)
+          ];
+        navigate(`/${randomType}/${idx}`);
+      } else {
+        setCurrentProblem(null);
+      }
     }
-    return null;
-  });
-  if (isLoading)
+  }, [RoadDetail, currentProblem, idx, navigate]);
+  // ✅ 로딩 중일 때 early return으로 분기
+  const parts = currentProblem?.content?.split("____");
+
+  const onSubmit = () => {
+    mutate({ problemId: currentProblem?.id, answer });
+    setModalOpen(true);
+  };
+  if (isLoading || isDetailLoading || !RoadDetail || !idx) {
     return (
       <div
         style={{
@@ -53,13 +95,7 @@ export const BlankProblem = () => {
         Loading...
       </div>
     );
-
-  const parts = currentProblem?.content?.split("____");
-
-  const onSubmit = () => {
-    mutate({ problemId: currentProblem?.id, answer });
-    setModalOpen(true);
-  };
+  }
 
   if (!currentProblem || !parts || parts.length < 2) {
     return (

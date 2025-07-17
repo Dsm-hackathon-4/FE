@@ -26,7 +26,7 @@ export const Baloon = ({ children, children2, offset, idx }: BaloonProps) => {
           <span style={{ ...theme.font.t1 }}>{children}</span>
           <span style={{ ...theme.font.b1 }}>{children2}</span>
         </Text>
-        <Btn onClick={handleClick}>연습 +5 XP</Btn>
+        <Btn onClick={handleClick}>시작하기</Btn>
       </Balloon>
     </BaloonWrapper>
   );

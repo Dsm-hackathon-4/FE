@@ -4,7 +4,8 @@ import { keyframes } from "@emotion/react";
 import { SelectBtn, StudyCheck } from "@/components";
 import { Cat, Check, IconSmaller, RewardChest, OpenChest } from "@/assets";
 import { Baloon } from "@/components/Baloon";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   useDetailRoadmap,
   useRoadmap,
@@ -13,7 +14,43 @@ import {
 import toast from "react-hot-toast";
 
 export const HomePage = () => {
-  const [openedChests, setOpenedChests] = useState<Set<number>>(new Set());
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [dots, setDots] = useState(() => {
+    const saved = localStorage.getItem("dots");
+    if (saved) return JSON.parse(saved);
+    return [false, false, false, "reward"];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("dots", JSON.stringify(dots));
+  }, [dots]);
+
+  useEffect(() => {
+    if (location.state?.chapterCompleted) {
+      setDots((prevDots) => {
+        const newDots = [...prevDots];
+        const firstFalseIdx = newDots.findIndex((dot) => dot === false);
+        if (firstFalseIdx !== -1) {
+          newDots[firstFalseIdx] = true;
+        }
+        return newDots;
+      });
+      // state 초기화 안 하면 useEffect가 계속 실행됨
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
+  const [openedChests, setOpenedChests] = useState<Set<number>>(() => {
+    const savedChests = localStorage.getItem("openedChests");
+    return savedChests ? new Set(JSON.parse(savedChests)) : new Set();
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "openedChests",
+      JSON.stringify(Array.from(openedChests))
+    );
+  }, [openedChests]);
   const [showConfetti, setShowConfetti] = useState(false);
   const { data, isLoading } = useRoadmap();
   const { data: RoadDetail } = useDetailRoadmap(data?.[0]?.id);
@@ -35,8 +72,6 @@ export const HomePage = () => {
         Loading...
       </div>
     );
-  console.log(RoadDetail);
-  const dots = [false, false, false, "reward"];
 
   const pattern = [
     "center",
@@ -91,6 +126,7 @@ export const HomePage = () => {
                   dots[idx - 2] !== false);
               return done === "reward" ? (
                 <StyledRewardChest
+                  key={idx}
                   src={openedChests.has(idx) ? OpenChest : RewardChest}
                   alt=""
                   offset={offsets[idx]}
@@ -114,12 +150,8 @@ export const HomePage = () => {
                   }}
                 />
               ) : (
-                <DotWrapper>
-                  <StudyCheck
-                    done={done as boolean}
-                    key={idx}
-                    offset={offsets[idx]}
-                  />
+                <DotWrapper key={idx}>
+                  <StudyCheck done={done as boolean} offset={offsets[idx]} />
                   {isShowBaloon && (
                     <Baloon
                       children={RoadDetail?.roadmap.title}

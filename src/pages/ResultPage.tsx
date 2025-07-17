@@ -2,8 +2,25 @@ import { theme } from "@/themes";
 import styled from "@emotion/styled";
 import { Correct, ResultIcon, Star, ResultCheck } from "@/assets";
 import { Button } from "@/components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const ResultPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { chapterComplete } = location.state || {};
+
+  useEffect(() => {
+    if (!chapterComplete) {
+      navigate("/");
+    }
+  }, [chapterComplete, navigate]);
+
+  if (!chapterComplete) {
+    return null; // Or a loading indicator
+  }
+
+  console.log(chapterComplete);
   return (
     <Wrapper>
       <Result>
@@ -30,7 +47,7 @@ export const ResultPage = () => {
                   <span style={theme.font.b2}>획득한 XP</span>
                 </Title>
                 <span style={{ ...theme.font.h2, color: theme.color.resultXp }}>
-                  +150 XP
+                  +{chapterComplete?.total_xp} XP
                 </span>
               </Xp>
               <Answer>
@@ -41,9 +58,12 @@ export const ResultPage = () => {
                 <span
                   style={{ ...theme.font.h2, color: theme.color.green[600] }}
                 >
-                  85%
+                  {chapterComplete?.accuracy_rate}%
                 </span>
-                <span style={theme.font.l2}>17/20 문제 정답</span>
+                <span style={theme.font.l2}>
+                  {chapterComplete?.correct_count}/
+                  {chapterComplete?.total_count} 문제 정답
+                </span>
               </Answer>
             </Content>
           </div>
@@ -51,6 +71,7 @@ export const ResultPage = () => {
             variant="tertiary2"
             size="result"
             style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            onClick={() => navigate("/", { state: { chapterCompleted: true } })}
           >
             <img src={ResultCheck} alt="resultCheck" />
             완료하기

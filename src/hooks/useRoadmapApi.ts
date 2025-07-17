@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import {
+  getChapterProblems,
   getDetailRoadmap,
   getRoadmapChapters,
   getRoadmaps,
@@ -32,5 +33,21 @@ export const useRoadmapChapters = (id: number | undefined) => {
       return getRoadmapChapters(id);
     },
     enabled: id !== undefined,
+  });
+};
+
+export const useChapterProblems = (
+  roadmapId: number | undefined,
+  chapterId: number | undefined
+) => {
+  return useQuery({
+    queryKey: ["getChapterProblems", roadmapId, chapterId],
+    queryFn: () => {
+      if (roadmapId === undefined || chapterId === undefined) {
+        throw new Error("Roadmap ID is required for detail roadmap query.");
+      }
+      return getChapterProblems(roadmapId, chapterId);
+    },
+    enabled: roadmapId !== undefined && chapterId !== undefined,
   });
 };
